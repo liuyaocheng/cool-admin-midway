@@ -147,7 +147,11 @@ export class PluginCenterService {
     }
     const plugins = await this.pluginInfoEntity.findBy(find);
     for (const plugin of plugins) {
-      const instance = await this.getInstance(plugin.content.data);
+      const data = await this.pluginService.getData(plugin.keyName);
+      if (!data) {
+        continue;
+      }
+      const instance = await this.getInstance(data.content.data);
       const pluginInfo = {
         ...plugin.pluginJson,
         config: this.getConfig(plugin.config),

@@ -36,18 +36,6 @@ export class PluginInfoEntity extends BaseEntity {
   @Column({ comment: '状态 0-禁用 1-启用', default: 0 })
   status: number;
 
-  @Column({ comment: '内容', type: 'json' })
-  content: {
-    type: 'comm' | 'module';
-    data: string;
-  };
-
-  @Column({ comment: 'ts内容', type: 'json' })
-  tsContent: {
-    type: 'ts';
-    data: string;
-  };
-
   @Column({ comment: '插件的plugin.json', type: 'json', nullable: true })
   pluginJson: any;
 

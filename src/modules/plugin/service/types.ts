@@ -9,6 +9,7 @@ import { Repository } from 'typeorm';
 import * as ts from 'typescript';
 import { Utils } from '../../../comm/utils';
 import { PluginInfoEntity } from '../entity/info';
+import { PluginService } from './info';
 
 /**
  * 插件类型服务
@@ -20,6 +21,9 @@ export class PluginTypesService extends BaseService {
 
   @InjectEntityModel(PluginInfoEntity)
   pluginInfoEntity: Repository<PluginInfoEntity>;
+
+  @Inject()
+  pluginService: PluginService;
 
   @Inject()
   utils: Utils;
@@ -239,7 +243,11 @@ export class PluginTypesService extends BaseService {
       .select(['a.id', 'a.status', 'a.tsContent', 'a.keyName'])
       .getMany();
     for (const pluginInfo of pluginInfos) {
-      const tsContent = pluginInfo.tsContent?.data;
+      const data = await this.pluginService.getData(pluginInfo.keyName);
+      if (!data) {
+        continue;
+      }
+      const tsContent = data.tsContent?.data;
       if (tsContent) {
         await this.generateDtsFile(pluginInfo.keyName, tsContent);
         await this.utils.sleep(200);

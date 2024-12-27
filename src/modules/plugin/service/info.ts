@@ -9,9 +9,11 @@ import { Equal, In, Not, Repository } from 'typeorm';
 import { PluginInfoEntity } from '../entity/info';
 import {
   Config,
+  ILogger,
   IMidwayApplication,
   IMidwayContext,
   InjectClient,
+  Logger,
 } from '@midwayjs/core';
 import * as _ from 'lodash';
 import { PluginInfo } from '../interface';
@@ -23,7 +25,8 @@ import {
 } from '../event/init';
 import { PluginMap, AnyString } from '../../../../typings/plugin';
 import { PluginTypesService } from './types';
-
+import * as path from 'path';
+import * as fs from 'fs';
 /**
  * 插件信息
  */
@@ -52,6 +55,9 @@ export class PluginService extends BaseService {
 
   @Inject()
   pluginTypesService: PluginTypesService;
+
+  @Logger()
+  logger: ILogger;
 
   /**
    * 新增或更新
@@ -106,6 +112,8 @@ export class PluginService extends BaseService {
     const list = await this.pluginInfoEntity.findBy({ id: In(ids) });
     for (const item of list) {
       await this.remove(item.keyName, !!item.hook);
+      // 删除文件
+      await this.deleteData(item.keyName);
     }
     await this.pluginInfoEntity.delete(ids);
   }
@@ -318,14 +326,6 @@ export class PluginService extends BaseService {
       hook: pluginJson.hook,
       readme,
       logo,
-      content: {
-        type: 'comm',
-        data: content,
-      },
-      tsContent: {
-        type: 'ts',
-        data: tsContent,
-      },
       description: pluginJson.description,
       pluginJson,
       config: pluginJson.config,
@@ -345,8 +345,101 @@ export class PluginService extends BaseService {
       // 全新安装
       await this.pluginInfoEntity.insert(data);
     }
+    // 保存插件内容
+    await this.saveData(
+      {
+        content: {
+          type: 'comm',
+          data: content,
+        },
+        tsContent: {
+          type: 'ts',
+          data: tsContent,
+        },
+      },
+      pluginJson.key
+    );
     this.pluginTypesService.generateDtsFile(pluginJson.key, tsContent);
     // 初始化插件
     await this.reInit(pluginJson.key);
+  }
+
+  /**
+   * 将插件内容保存到文件
+   * @param content 内容
+   * @param keyName 插件key
+   */
+  async saveData(
+    data: {
+      content: {
+        type: 'comm' | 'module';
+        data: string;
+      };
+      tsContent: {
+        type: 'ts';
+        data: string;
+      };
+    },
+    keyName: string
+  ) {
+    const filePath = this.pluginPath(keyName);
+    // 确保目录存在
+    const dir = path.dirname(filePath);
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
+    }
+    // 写入文件，如果存在则覆盖
+    fs.writeFileSync(filePath, JSON.stringify(data, null, 0), { flag: 'w' });
+  }
+
+  /**
+   * 获得插件数据
+   * @param keyName
+   * @returns
+   */
+  async getData(keyName: string): Promise<{
+    content: {
+      type: 'comm' | 'module';
+      data: string;
+    };
+    tsContent: {
+      type: 'ts';
+      data: string;
+    };
+  }> {
+    const filePath = this.pluginPath(keyName);
+    if (!fs.existsSync(filePath)) {
+      this.logger.warn(
+        `插件[${keyName}]文件不存在，请卸载后重新安装: ${filePath}`
+      );
+      return null;
+    }
+    return JSON.parse(await fs.promises.readFile(filePath, 'utf-8'));
+  }
+
+  /**
+   * 删除插件
+   * @param keyName
+   */
+  async deleteData(keyName: string) {
+    const filePath = this.pluginPath(keyName);
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath);
+    }
+  }
+
+  /**
+   * 获得插件路径
+   * @param keyName
+   * @returns
+   */
+  pluginPath(keyName: string) {
+    return path.join(
+      this.app.getBaseDir(),
+      '..',
+      'cool',
+      'plugin',
+      `${keyName}.cool`
+    );
   }
 }
