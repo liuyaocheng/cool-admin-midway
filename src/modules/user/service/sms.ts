@@ -50,7 +50,10 @@ export class UserSmsService extends BaseService {
     // 随机四位验证码
     const code = _.random(1000, 9999);
     const pluginKey = this.config.pluginKey;
-    if (!this.plugin) throw new CoolCommException('未配置短信插件');
+    if (!this.plugin)
+      throw new CoolCommException(
+        '未配置短信插件，请到插件市场下载安装配置：https://cool-js.com/plugin?keyWord=短信'
+      );
     try {
       if (pluginKey == 'sms-tx') {
         await this.plugin.send([phone], [code]);

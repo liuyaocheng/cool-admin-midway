@@ -28,11 +28,26 @@ export class UserWxService extends BaseService {
   pluginService: PluginService;
 
   /**
+   * 获得插件实例
+   * @returns
+   */
+  async getPlugin() {
+    try {
+      const wxPlugin: any = await this.pluginService.getInstance('wx');
+      return wxPlugin;
+    } catch (error) {
+      throw new CoolCommException(
+        '未配置微信插件，请到插件市场下载安装配置：https://cool-js.com/plugin/70'
+      );
+    }
+  }
+
+  /**
    * 获得小程序实例
    * @returns
    */
   async getMiniApp() {
-    const wxPlugin: any = await this.pluginService.getInstance('wx');
+    const wxPlugin: any = await this.getPlugin();
     return wxPlugin.MiniApp();
   }
 
@@ -41,7 +56,7 @@ export class UserWxService extends BaseService {
    * @returns
    */
   async getOfficialAccount() {
-    const wxPlugin: any = await this.pluginService.getInstance('wx');
+    const wxPlugin: any = await this.getPlugin();
     return wxPlugin.OfficialAccount();
   }
 
@@ -50,7 +65,7 @@ export class UserWxService extends BaseService {
    * @returns
    */
   async getOpenPlatform() {
-    const wxPlugin: any = await this.pluginService.getInstance('wx');
+    const wxPlugin: any = await this.getPlugin();
     return wxPlugin.OpenPlatform();
   }
 
