@@ -1,6 +1,5 @@
 import { Inject, Provide } from '@midwayjs/decorator';
 import { Context } from '@midwayjs/koa';
-import * as ipdb from 'ipip-ipdb';
 import * as _ from 'lodash';
 import * as moment from 'moment';
 
