@@ -1,9 +1,8 @@
 import { CoolConfig } from '@cool-midway/core';
 import { MidwayConfig } from '@midwayjs/core';
 import { entities } from '../entities';
-
 /**
- * 本地开发 npm run dev 读取的配置文件
+ * 本地开发 npm run prod 读取的配置文件
  */
 export default {
   typeorm: {
@@ -16,7 +15,7 @@ export default {
         password: '123456',
         database: 'cool',
         // 自动建表 注意：线上部署的时候不要使用，有可能导致数据丢失
-        synchronize: true,
+        synchronize: false,
         // 打印日志
         logging: false,
         // 字符集
@@ -33,13 +32,7 @@ export default {
     },
   },
   cool: {
-    // 实体与路径，跟生成代码、前端请求、swagger文档相关 注意：线上不建议开启，以免暴露敏感信息
-    eps: true,
-    // 是否自动导入模块数据库
-    initDB: true,
-    // 判断是否初始化的方式
-    initJudge: 'db',
-    // 是否自动导入模块菜单
-    initMenu: true,
+    // 是否自动导入数据库，生产环境不建议开，用本地的数据库手动初始化
+    initDB: false,
   } as CoolConfig,
 } as MidwayConfig;

@@ -1,6 +1,5 @@
-import { Inject, Provide } from '@midwayjs/decorator';
+import { Inject, Provide } from '@midwayjs/core';
 import { Context } from '@midwayjs/koa';
-import * as _ from 'lodash';
 import * as moment from 'moment';
 
 /**
