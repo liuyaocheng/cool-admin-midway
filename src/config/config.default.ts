@@ -19,13 +19,6 @@ export default {
         prefix: '/public',
         dir: path.join(__dirname, '..', '..', 'public'),
       },
-      welcome: {
-        prefix: '/',
-        dir: path.join(__dirname, '..', '..', 'public'),
-        alias: {
-          '/': '/welcome.html',
-        },
-      },
     },
   },
   // 文件上传

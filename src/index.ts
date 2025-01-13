@@ -2,6 +2,7 @@
 export { MainConfiguration as Configuration } from './configuration';
 export * from './comm/utils';
 export * from './config/config.default';
+export * from './config/config.local';
 export * from './modules/base/entity/sys/user_role';
 export * from './modules/base/entity/sys/user';
 export * from './modules/base/entity/sys/role_menu';
@@ -13,7 +14,6 @@ export * from './modules/base/entity/sys/log';
 export * from './modules/base/entity/sys/department';
 export * from './modules/base/entity/sys/conf';
 export * from './entities';
-export * from './config/config.local';
 export * from './config/config.prod';
 export * from './interface';
 export * from './modules/base/service/sys/conf';

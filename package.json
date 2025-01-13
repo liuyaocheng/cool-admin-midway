@@ -40,7 +40,8 @@
     "mwtsc": "^1.15.1",
     "pkg": "^5.8.1",
     "ts-jest": "^29.2.5",
-    "typescript": "~5.7.3"
+    "typescript": "~5.7.3",
+    "rimraf": "^5.0.5"
   },
   "engines": {
     "node": ">=18.0.0"
@@ -48,7 +49,7 @@
   "scripts": {
     "start": "NODE_ENV=production node ./bootstrap.js",
     "entity": "cool entity",
-    "dev": "cool check entity && bundle && cross-env NODE_ENV=local mwtsc --watch --run @midwayjs/mock/app.js",
+    "dev": "cool check entity && cross-env NODE_ENV=local mwtsc --watch --run @midwayjs/mock/app.js",
     "test": "cross-env NODE_ENV=unittest jest",
     "cov": "jest --coverage",
     "lint": "mwts check",
@@ -56,7 +57,7 @@
     "ci": "npm run cov",
     "build": "cool entity && bundle && mwtsc --cleanOutDir",
     "build:obfuscate": "cool entity && bundle && mwtsc --cleanOutDir && cool obfuscate",
-    "pkg": "npm run build && pkg . -d > build/pkg.log",
+    "pkg": "rimraf build && mkdir build && npm run build && pkg . -d > build/pkg.log",
     "pm2:start": "pm2 start ./bootstrap.js -i 1 --name cool-admin",
     "pm2:stop": "pm2 stop cool-admin & pm2 delete cool-admin"
   },

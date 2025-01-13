@@ -1,6 +1,5 @@
 import { CoolConfig } from '@cool-midway/core';
 import { MidwayConfig } from '@midwayjs/core';
-import { entities } from '../entities';
 
 /**
  * 本地开发 npm run dev 读取的配置文件
@@ -24,7 +23,7 @@ export default {
         // 是否开启缓存
         cache: true,
         // 实体路径
-        entities,
+        entities: ['**/modules/*/entity'],
         // 扩展配置
         extra: {
           keepAliveInitialDelay: 10000,

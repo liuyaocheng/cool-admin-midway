@@ -5,6 +5,7 @@ import {
   IMidwayApplication,
   Inject,
   ILogger,
+  MidwayWebRouterService,
 } from '@midwayjs/core';
 import * as koa from '@midwayjs/koa';
 // import * as crossDomain from '@midwayjs/cross-domain';
@@ -54,7 +55,20 @@ export class MainConfiguration {
   app: IMidwayApplication;
 
   @Inject()
+  webRouterService: MidwayWebRouterService;
+
+  @Inject()
   logger: ILogger;
 
-  async onReady() {}
+  async onReady() {
+    this.webRouterService.addRouter(
+      async ctx => {
+        ctx.redirect('/public/index.html');
+      },
+      {
+        url: '/',
+        requestMethod: 'GET',
+      }
+    );
+  }
 }
