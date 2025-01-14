@@ -69,13 +69,12 @@ export class BaseOpenController extends BaseController {
   @CoolTag(TagTypes.IGNORE_TOKEN)
   @Get('/captcha', { summary: '验证码' })
   async captcha(
-    @Query('type') type: string,
     @Query('width') width: number,
     @Query('height') height: number,
     @Query('color') color: string
   ) {
     return this.ok(
-      await this.baseSysLoginService.captcha(type, width, height, color)
+      await this.baseSysLoginService.captcha(width, height, color)
     );
   }
 

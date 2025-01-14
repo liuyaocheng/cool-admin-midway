@@ -1,14 +1,19 @@
-import { Inject, Provide } from '@midwayjs/core';
+import { Inject, Provide, Scope, ScopeEnum } from '@midwayjs/core';
 import { Context } from '@midwayjs/koa';
 import * as moment from 'moment';
+import { LocationUtil } from '@cool-midway/core';
 
 /**
  * 帮助类
  */
 @Provide()
+@Scope(ScopeEnum.Singleton)
 export class Utils {
   @Inject()
   baseDir;
+
+  @Inject()
+  locationUtil: LocationUtil;
 
   /**
    * 获得请求IP

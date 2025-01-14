@@ -1,7 +1,6 @@
 import { Inject, Provide, Config, InjectClient } from '@midwayjs/core';
 import { BaseService, CoolCommException } from '@cool-midway/core';
 import { LoginDTO } from '../../dto/login';
-import * as svgCaptcha from 'svg-captcha';
 import { v1 as uuid } from 'uuid';
 import { BaseSysUserEntity } from '../../entity/sys/user';
 import { Repository } from 'typeorm';
@@ -14,7 +13,8 @@ import { BaseSysDepartmentService } from './department';
 import * as jwt from 'jsonwebtoken';
 import { Context } from '@midwayjs/koa';
 import { CachingFactory, MidwayCache } from '@midwayjs/cache-manager';
-// import * as sharp from 'sharp';
+import { Utils } from '../../../../comm/utils';
+import * as svgCaptcha from 'svg-captcha';
 
 /**
  * 登录
@@ -38,6 +38,9 @@ export class BaseSysLoginService extends BaseService {
 
   @Inject()
   ctx: Context;
+
+  @Inject()
+  utils: Utils;
 
   @Config('module.base')
   coolConfig;
@@ -103,15 +106,15 @@ export class BaseSysLoginService extends BaseService {
 
   /**
    * 验证码
-   * @param type 图片验证码类型 svg
    * @param width 宽
    * @param height 高
    */
-  async captcha(type: string, width = 150, height = 50, color = '#fff') {
+  async captcha(width = 150, height = 50, color = '#fff') {
     const svg = svgCaptcha.create({
-      ignoreChars: 'qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM',
+      // ignoreChars: 'qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM',
       width,
       height,
+      noise: 3,
     });
     const result = {
       captchaId: uuid(),
@@ -132,12 +135,11 @@ export class BaseSysLoginService extends BaseService {
     rpList.forEach(rp => {
       result.data = result.data['replaceAll'](rp, color);
     });
-    if (type === 'png' || type === 'base64') {
-      result.data = await this.svgToBase64Png(result.data, {
-        width,
-        height,
-      });
-    }
+
+    // Convert SVG to base64
+    const base64Data = Buffer.from(result.data).toString('base64');
+    result.data = `data:image/svg+xml;base64,${base64Data}`;
+
     // 半小时过期
     await this.midwayCache.set(
       `verify:img:${result.captchaId}`,
@@ -145,38 +147,6 @@ export class BaseSysLoginService extends BaseService {
       1800 * 1000
     );
     return result;
-  }
-
-  /**
-   * svg转base64
-   * @param svgBuffer
-   * @param options
-   */
-  async svgToBase64Png(svgBuffer: string, options = {} as any) {
-    try {
-      // const svgBufferData = Buffer.from(svgBuffer);
-
-      // // 处理图片
-      // const pngBuffer = await sharp(svgBufferData)
-      //   .png({
-      //     quality: options.quality || 100,
-      //     compressionLevel: options.compression || 6,
-      //   })
-      //   .resize(options.width, options.height, {
-      //     fit: 'contain',
-      //     background: { r: 255, g: 255, b: 255, alpha: 1 },
-      //   })
-      //   .toBuffer();
-
-      // // 转换为base64
-      // const base64String = `data:image/png;base64,${pngBuffer.toString(
-      //   'base64'
-      // )}`;
-      return '';
-    } catch (error) {
-      console.error('转换失败:', error);
-      throw error;
-    }
   }
 
   /**
