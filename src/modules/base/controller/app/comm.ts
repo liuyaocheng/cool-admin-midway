@@ -9,7 +9,7 @@ import {
 } from '@cool-midway/core';
 import { Context } from '@midwayjs/koa';
 import { BaseSysParamService } from '../../service/sys/param';
-// import { PluginService } from '../../../plugin/service/info';
+import { PluginService } from '../../../plugin/service/info';
 
 /**
  * 不需要登录的后台接口
@@ -18,8 +18,8 @@ import { BaseSysParamService } from '../../service/sys/param';
 @Provide()
 @CoolController()
 export class BaseAppCommController extends BaseController {
-  // @Inject()
-  // pluginService: PluginService;
+  @Inject()
+  pluginService: PluginService;
 
   @Inject()
   ctx: Context;
@@ -57,8 +57,8 @@ export class BaseAppCommController extends BaseController {
    */
   @Post('/upload', { summary: '文件上传' })
   async upload() {
-    // const file = await this.pluginService.getInstance('upload');
-    // return this.ok(await file.upload(this.ctx));
+    const file = await this.pluginService.getInstance('upload');
+    return this.ok(await file.upload(this.ctx));
   }
 
   /**
@@ -66,7 +66,7 @@ export class BaseAppCommController extends BaseController {
    */
   @Get('/uploadMode', { summary: '文件上传模式' })
   async uploadMode() {
-    // const file = await this.pluginService.getInstance('upload');
-    // return this.ok(await file.getMode());
+    const file = await this.pluginService.getInstance('upload');
+    return this.ok(await file.getMode());
   }
 }

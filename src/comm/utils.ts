@@ -1,7 +1,7 @@
 import { Inject, Provide, Scope, ScopeEnum } from '@midwayjs/core';
 import { Context } from '@midwayjs/koa';
 import * as moment from 'moment';
-import { LocationUtil } from '@cool-midway/core';
+import * as path from 'path';
 
 /**
  * 帮助类
@@ -12,8 +12,20 @@ export class Utils {
   @Inject()
   baseDir;
 
-  @Inject()
-  locationUtil: LocationUtil;
+  /**
+   * 获得dist路径
+   */
+  getDistPath() {
+    const runPath = __dirname;
+    const distIndex =
+      runPath.lastIndexOf('/dist/') !== -1
+        ? runPath.lastIndexOf('/dist/')
+        : runPath.lastIndexOf('\\dist\\');
+    if (distIndex !== -1) {
+      return path.join(runPath.substring(0, distIndex), 'dist');
+    }
+    return path.join(runPath, 'dist');
+  }
 
   /**
    * 获得请求IP

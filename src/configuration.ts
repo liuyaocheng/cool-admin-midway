@@ -18,6 +18,7 @@ import * as LocalConfig from './config/config.local';
 import * as ProdConfig from './config/config.prod';
 import * as cool from '@cool-midway/core';
 import * as upload from '@midwayjs/upload';
+import * as os from 'os';
 
 @Configuration({
   imports: [
@@ -60,15 +61,5 @@ export class MainConfiguration {
   @Inject()
   logger: ILogger;
 
-  async onReady() {
-    this.webRouterService.addRouter(
-      async ctx => {
-        ctx.redirect('/public/index.html');
-      },
-      {
-        url: '/',
-        requestMethod: 'GET',
-      }
-    );
-  }
+  async onReady() {}
 }

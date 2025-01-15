@@ -17,14 +17,14 @@
     "noImplicitAny": false,
     "typeRoots": [
       "typings",
-      "./node_modules/@types"
+      "./node_modules/@types",
     ],
     "outDir": "dist",
-    "rootDir": "src"
+    "rootDir": "src",
   },
   "exclude": [
     "dist",
     "node_modules",
-    "test"
-  ]
+    "test",
+  ],
 }

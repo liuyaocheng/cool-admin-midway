@@ -2,12 +2,14 @@ import { CoolConfig } from '@cool-midway/core';
 import { MidwayConfig } from '@midwayjs/core';
 import { CoolCacheStore } from '@cool-midway/core';
 import * as path from 'path';
+import { getUploadDir } from '../modules/plugin/hooks/upload';
+
 // redis缓存
 // import { redisStore } from 'cache-manager-ioredis-yet';
 
 export default {
   // use for cookie sign key, should change to your own and keep security
-  keys: '673dcd50-f95d-4109-b69d-aa80df64098e',
+  keys: '576848ea-bb0c-4c0c-ac95-c8602ef908b5',
   koa: {
     port: 8001,
   },
@@ -18,6 +20,10 @@ export default {
       default: {
         prefix: '/public',
         dir: path.join(__dirname, '..', '..', 'public'),
+      },
+      static: {
+        prefix: '/upload',
+        dir: getUploadDir(),
       },
     },
   },

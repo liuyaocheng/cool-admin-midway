@@ -1,5 +1,5 @@
 {
-  "name": "cool-admin-midway",
+  "name": "cool-admin",
   "version": "8.0.0",
   "description": "一个很酷的Ai快速开发框架",
   "private": true,
@@ -49,8 +49,7 @@
   },
   "scripts": {
     "start": "NODE_ENV=production node ./bootstrap.js",
-    "entity": "cool entity",
-    "dev": "cool check entity && cross-env NODE_ENV=local mwtsc --cleanOutDir --watch --run @midwayjs/mock/app.js",
+    "dev": "rimraf src/index.ts && cool check entity && cross-env NODE_ENV=local mwtsc --cleanOutDir --watch --run @midwayjs/mock/app.js",
     "test": "cross-env NODE_ENV=unittest jest",
     "cov": "jest --coverage",
     "lint": "mwts check",
@@ -66,7 +65,9 @@
   "pkg": {
     "scripts": "dist/**/*",
     "assets": [
-      "public/**/*"
+      "public/**/*",
+      "typings/**/*",
+      "cool/**/*"
     ],
     "targets": [
       "node18-macos-x64",

@@ -7,7 +7,7 @@ import {
 } from '@cool-midway/core';
 import { ALL, Body, Get, Inject, Post, Provide } from '@midwayjs/core';
 import { Context } from '@midwayjs/koa';
-// import { PluginService } from '../../../plugin/service/info';
+import { PluginService } from '../../../plugin/service/info';
 import { BaseSysUserEntity } from '../../entity/sys/user';
 import { BaseSysLoginService } from '../../service/sys/login';
 import { BaseSysPermsService } from '../../service/sys/perms';
@@ -32,8 +32,8 @@ export class BaseCommController extends BaseController {
   @Inject()
   ctx: Context;
 
-  // @Inject()
-  // pluginService: PluginService;
+  @Inject()
+  pluginService: PluginService;
 
   /**
    * 获得个人信息
@@ -69,8 +69,8 @@ export class BaseCommController extends BaseController {
    */
   @Post('/upload', { summary: '文件上传' })
   async upload() {
-    // const file = await this.pluginService.getInstance('upload');
-    // return this.ok(await file.upload(this.ctx));
+    const file = await this.pluginService.getInstance('upload');
+    return this.ok(await file.upload(this.ctx));
   }
 
   /**
@@ -78,8 +78,8 @@ export class BaseCommController extends BaseController {
    */
   @Get('/uploadMode', { summary: '文件上传模式' })
   async uploadMode() {
-    // const file = await this.pluginService.getInstance('upload');
-    // return this.ok(await file.getMode());
+    const file = await this.pluginService.getInstance('upload');
+    return this.ok(await file.getMode());
   }
 
   /**
