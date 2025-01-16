@@ -6,17 +6,7 @@ import * as moment from 'moment';
 import { v1 as uuid } from 'uuid';
 import { CoolCommException } from '@cool-midway/core';
 import * as _ from 'lodash';
-import * as os from 'os';
-import * as pkg from '../../../../../package.json';
-
-// 获得上传目录
-export const getUploadDir = () => {
-  const uploadDir = path.join(os.homedir(), `.${pkg.name}`, 'upload');
-  if (!fs.existsSync(uploadDir)) {
-    fs.mkdirSync(uploadDir, { recursive: true });
-  }
-  return uploadDir;
-};
+import { pUploadPath } from '../../../../comm/path';
 
 /**
  * 文件上传
@@ -56,7 +46,7 @@ export class CoolPlugin extends BasePluginHook implements BaseUpload {
       ? await download(url)
       : fs.readFileSync(url);
     // 创建文件夹
-    const dirPath = path.join(getUploadDir(), `${moment().format('YYYYMMDD')}`);
+    const dirPath = path.join(pUploadPath(), `${moment().format('YYYYMMDD')}`);
     if (!fs.existsSync(dirPath)) {
       fs.mkdirSync(dirPath, { recursive: true });
     }
@@ -95,7 +85,7 @@ export class CoolPlugin extends BasePluginHook implements BaseUpload {
       if (_.isEmpty(ctx.files)) {
         throw new CoolCommException('上传文件为空');
       }
-      const basePath = getUploadDir();
+      const basePath = pUploadPath();
 
       const file = ctx.files[0];
       const extension = file.filename.split('.').pop();

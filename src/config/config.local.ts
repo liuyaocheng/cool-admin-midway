@@ -1,5 +1,7 @@
 import { CoolConfig } from '@cool-midway/core';
 import { MidwayConfig } from '@midwayjs/core';
+import { pSqlitePath } from '../comm/path';
+import { entities } from '../entities';
 
 /**
  * 本地开发 npm run dev 读取的配置文件
@@ -8,26 +10,16 @@ export default {
   typeorm: {
     dataSource: {
       default: {
-        type: 'mysql',
-        host: '192.168.0.119',
-        port: 3306,
-        username: 'root',
-        password: '123456',
-        database: 'cool',
+        type: 'sqlite',
+        // 数据库文件地址
+        database: pSqlitePath(),
         // 自动建表 注意：线上部署的时候不要使用，有可能导致数据丢失
         synchronize: true,
         // 打印日志
-        logging: false,
-        // 字符集
-        charset: 'utf8mb4',
-        // 是否开启缓存
-        cache: true,
+        logging: true,
         // 实体路径
-        entities: ['**/modules/*/entity'],
+        entities,
         // 扩展配置
-        extra: {
-          keepAliveInitialDelay: 10000,
-        },
       },
     },
   },

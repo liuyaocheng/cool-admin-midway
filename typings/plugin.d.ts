@@ -1,3 +1,4 @@
+import * as feishu from './feishu';
 import { BaseUpload, MODETYPE } from './upload';
 type AnyString = string & {};
 /**
@@ -5,4 +6,5 @@ type AnyString = string & {};
  */
 interface PluginMap {
   upload: BaseUpload;
+  feishu: feishu.CoolPlugin;
 }

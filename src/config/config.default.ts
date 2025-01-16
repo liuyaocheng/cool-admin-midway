@@ -2,13 +2,13 @@ import { CoolConfig } from '@cool-midway/core';
 import { MidwayConfig } from '@midwayjs/core';
 import { CoolCacheStore } from '@cool-midway/core';
 import * as path from 'path';
-import { getUploadDir } from '../modules/plugin/hooks/upload';
+import { pUploadPath } from '../comm/path';
 
 // redis缓存
 // import { redisStore } from 'cache-manager-ioredis-yet';
 
 export default {
-  // use for cookie sign key, should change to your own and keep security
+  // 确保每个项目唯一，项目首次启动会自动生成
   keys: '576848ea-bb0c-4c0c-ac95-c8602ef908b5',
   koa: {
     port: 8001,
@@ -18,12 +18,12 @@ export default {
     buffer: true,
     dirs: {
       default: {
-        prefix: '/public',
+        prefix: '/',
         dir: path.join(__dirname, '..', '..', 'public'),
       },
       static: {
         prefix: '/upload',
-        dir: getUploadDir(),
+        dir: pUploadPath(),
       },
     },
   },
@@ -61,6 +61,13 @@ export default {
   cool: {
     // 已经插件化，本地文件上传查看 plugin/config.ts，其他云存储查看对应插件的使用
     file: {},
+    // redis配置
+    redis: {
+      port: 6379,
+      host: '127.0.0.1',
+      password: '',
+      db: 0,
+    },
     // crud配置
     crud: {
       // 插入模式，save不会校验字段(允许传入不存在的字段)，insert会校验字段

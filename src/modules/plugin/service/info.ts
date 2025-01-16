@@ -29,6 +29,7 @@ import { PluginMap, AnyString } from '../../../../typings/plugin';
 import { PluginTypesService } from './types';
 import * as path from 'path';
 import * as fs from 'fs';
+import { pPluginPath } from '../../../comm/path';
 /**
  * 插件信息
  */
@@ -254,38 +255,42 @@ export class PluginService extends BaseService {
     tsContent: string;
     errorData: string;
   }> {
-    const decompress = require('decompress');
-    const files = await decompress(filePath);
+    const AdmZip = require('adm-zip');
+    const zip = new AdmZip(filePath);
+    const files = zip.getEntries();
     let errorData;
     let pluginJson: PluginInfo,
       readme: string,
       logo: string,
       content: string,
       tsContent: string;
+
     try {
+      // 通用方法获取文件内容
+      const getFileContent = (
+        entryName: string,
+        encoding: 'utf-8' | 'base64' = 'utf-8'
+      ) => {
+        const file = _.find(files, { entryName });
+        if (!file) {
+          throw new Error(`File ${entryName} not found`);
+        }
+        return file?.getData()?.toString(encoding);
+      };
+
       errorData = 'plugin.json';
-      pluginJson = JSON.parse(
-        _.find(files, { path: 'plugin.json', type: 'file' }).data.toString()
-      );
+      pluginJson = JSON.parse(getFileContent('plugin.json'));
+
       errorData = 'readme';
-      readme = _.find(files, {
-        path: pluginJson.readme,
-        type: 'file',
-      }).data.toString();
+      readme = getFileContent(pluginJson.readme);
+
       errorData = 'logo';
-      logo = _.find(files, {
-        path: pluginJson.logo,
-        type: 'file',
-      }).data.toString('base64');
-      content = _.find(files, {
-        path: 'src/index.js',
-        type: 'file',
-      }).data.toString();
-      tsContent =
-        _.find(files, {
-          path: 'source/index.ts',
-          type: 'file',
-        })?.data?.toString() || '';
+      logo = getFileContent(pluginJson.logo, 'base64');
+
+      errorData = 'content';
+      content = getFileContent('src/index.js');
+
+      tsContent = getFileContent('source/index.ts');
     } catch (e) {
       throw new CoolCommException('插件信息不完整');
     }
@@ -328,6 +333,14 @@ export class PluginService extends BaseService {
       hook: pluginJson.hook,
       readme,
       logo,
+      content: {
+        type: 'comm',
+        data: content,
+      },
+      tsContent: {
+        type: 'ts',
+        data: tsContent,
+      },
       description: pluginJson.description,
       pluginJson,
       config: pluginJson.config,
@@ -411,10 +424,30 @@ export class PluginService extends BaseService {
   }> {
     const filePath = this.pluginPath(keyName);
     if (!fs.existsSync(filePath)) {
-      this.logger.warn(
-        `插件[${keyName}]文件不存在，请卸载后重新安装: ${filePath}`
-      );
-      return null;
+      // 尝试从数据库中获取
+      const info = await this.pluginInfoEntity.findOne({
+        where: { keyName: Equal(keyName) },
+        select: ['content', 'tsContent'],
+      });
+      if (info) {
+        // 保存插件到文件
+        this.saveData(
+          {
+            content: info.content,
+            tsContent: info.tsContent,
+          },
+          keyName
+        );
+        return {
+          content: info.content,
+          tsContent: info.tsContent,
+        };
+      } else {
+        this.logger.warn(
+          `插件[${keyName}]文件不存在，请卸载后重新安装: ${filePath}`
+        );
+        return;
+      }
     }
     return JSON.parse(await fs.promises.readFile(filePath, 'utf-8'));
   }
@@ -436,12 +469,6 @@ export class PluginService extends BaseService {
    * @returns
    */
   pluginPath(keyName: string) {
-    return path.join(
-      this.app.getBaseDir(),
-      '..',
-      'cool',
-      'plugin',
-      `${keyName}.cool`
-    );
+    return path.join(pPluginPath(), `${keyName}`);
   }
 }
