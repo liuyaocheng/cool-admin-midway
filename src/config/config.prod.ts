@@ -23,7 +23,7 @@ export default {
   },
   cool: {
     // 实体与路径，跟生成代码、前端请求、swagger文档相关 注意：线上不建议开启，以免暴露敏感信息
-    eps: false,
+    eps: true,
     // 是否自动导入模块数据库
     initDB: true,
     // 判断是否初始化的方式

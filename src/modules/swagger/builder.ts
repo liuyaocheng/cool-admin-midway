@@ -24,7 +24,7 @@ export class SwaggerBuilder {
    */
   async init() {
     if (this.epsConfig) {
-      await this.build();
+      this.build();
     }
   }
 
@@ -257,6 +257,21 @@ export class SwaggerBuilder {
                     },
                   ],
               tags: [moduleName || '其他'],
+              requestBody:
+                method == 'post'
+                  ? {
+                      description: '请求体',
+                      required: true,
+                      content: {
+                        'application/json': {
+                          schema: {
+                            type: 'object',
+                            properties: {},
+                          },
+                        },
+                      },
+                    }
+                  : {},
               responses: schemas
                 ? {
                     '200': {

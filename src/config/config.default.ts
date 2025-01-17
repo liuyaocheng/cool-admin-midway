@@ -61,6 +61,9 @@ export default {
   cool: {
     // 已经插件化，本地文件上传查看 plugin/config.ts，其他云存储查看对应插件的使用
     file: {},
+    rpc: {
+      name: 'main',
+    },
     // redis配置
     redis: {
       port: 6379,

@@ -13,13 +13,17 @@ export class OpenDemoPluginController extends BaseController {
   @Get('/invoke', { summary: '调用插件' })
   async invoke() {
     // 获取插件实例
-    const instance = await this.pluginService.getInstance('feishu');
-    instance.sendByHook({
-      msg_type: 'text',
-      content: {
-        text: '测试',
-      },
-    });
+    const instance: any = await this.pluginService.getInstance('ollama');
+    // 调用chat
+    const messages = [
+      { role: 'system', content: '你叫小酷，是一个智能助理' },
+      { role: 'user', content: '写一个1000字的关于春天的文章' },
+    ];
+    for (let i = 0; i < 3; i++) {
+      instance.chat(messages, { stream: true }, res => {
+        console.log(i, res.content);
+      });
+    }
     return this.ok();
   }
 }
