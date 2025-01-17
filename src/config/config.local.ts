@@ -2,6 +2,7 @@ import { CoolConfig } from '@cool-midway/core';
 import { MidwayConfig } from '@midwayjs/core';
 import { pSqlitePath } from '../comm/path';
 import { entities } from '../entities';
+import { TenantSubscriber } from '../modules/base/db/tenant';
 
 /**
  * 本地开发 npm run dev 读取的配置文件
@@ -19,6 +20,7 @@ export default {
         logging: true,
         // 实体路径
         entities,
+        subscribers: [TenantSubscriber],
       },
     },
   },
