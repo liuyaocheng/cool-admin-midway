@@ -1,4 +1,4 @@
-import { BaseEntity } from '@cool-midway/core';
+import { BaseEntity } from '../base';
 import { Column, Index, Entity } from 'typeorm';
 
 /**

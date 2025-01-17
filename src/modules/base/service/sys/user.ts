@@ -136,7 +136,7 @@ export class BaseSysUserService extends BaseService {
       throw new CoolCommException('用户名已经存在~');
     }
     param.password = md5(param.password);
-    await this.baseSysUserEntity.save(param);
+    await super.add(param);
     await this.updateUserRole(param);
     return param.id;
   }

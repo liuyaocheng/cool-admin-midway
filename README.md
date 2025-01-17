@@ -122,7 +122,7 @@ $ open http://localhost:8001/
 `src/modules/demo/entity/goods.ts`，项目启动数据库会自动创建该表，无需手动创建
 
 ```ts
-import { BaseEntity } from '@cool-midway/core';
+import { BaseEntity } from '../../base/entity/base';
 import { Column, Entity, Index } from 'typeorm';
 
 /**

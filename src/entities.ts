@@ -10,16 +10,17 @@ import * as entity7 from './modules/recycle/entity/data';
 import * as entity8 from './modules/plugin/entity/info';
 import * as entity9 from './modules/dict/entity/type';
 import * as entity10 from './modules/dict/entity/info';
-import * as entity11 from './modules/base/entity/sys/user_role';
-import * as entity12 from './modules/base/entity/sys/user';
-import * as entity13 from './modules/base/entity/sys/role_menu';
-import * as entity14 from './modules/base/entity/sys/role_department';
-import * as entity15 from './modules/base/entity/sys/role';
-import * as entity16 from './modules/base/entity/sys/param';
-import * as entity17 from './modules/base/entity/sys/menu';
-import * as entity18 from './modules/base/entity/sys/log';
-import * as entity19 from './modules/base/entity/sys/department';
-import * as entity20 from './modules/base/entity/sys/conf';
+import * as entity11 from './modules/base/entity/base';
+import * as entity12 from './modules/base/entity/sys/user_role';
+import * as entity13 from './modules/base/entity/sys/user';
+import * as entity14 from './modules/base/entity/sys/role_menu';
+import * as entity15 from './modules/base/entity/sys/role_department';
+import * as entity16 from './modules/base/entity/sys/role';
+import * as entity17 from './modules/base/entity/sys/param';
+import * as entity18 from './modules/base/entity/sys/menu';
+import * as entity19 from './modules/base/entity/sys/log';
+import * as entity20 from './modules/base/entity/sys/department';
+import * as entity21 from './modules/base/entity/sys/conf';
 export const entities = [
   ...Object.values(entity0),
   ...Object.values(entity1),
@@ -42,4 +43,5 @@ export const entities = [
   ...Object.values(entity18),
   ...Object.values(entity19),
   ...Object.values(entity20),
+  ...Object.values(entity21),
 ];

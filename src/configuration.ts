@@ -19,6 +19,7 @@ import * as ProdConfig from './config/config.prod';
 import * as cool from '@cool-midway/core';
 import * as upload from '@midwayjs/upload';
 import * as task from '@cool-midway/task';
+import './modules/base/entity/base';
 
 @Configuration({
   imports: [
@@ -39,7 +40,7 @@ import * as task from '@cool-midway/task';
     // cool-admin 官方组件 https://cool-js.com
     cool,
     // 任务与队列
-    // task,
+    task,
     {
       component: info,
       enabledEnvironment: ['local', 'prod'],

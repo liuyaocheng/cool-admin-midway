@@ -19,7 +19,8 @@ export default {
         logging: true,
         // 实体路径
         entities,
-        // 扩展配置
+        // 时区
+        timezone: '+08:00',
       },
     },
   },

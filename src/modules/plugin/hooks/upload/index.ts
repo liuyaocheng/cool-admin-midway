@@ -82,6 +82,15 @@ export class CoolPlugin extends BasePluginHook implements BaseUpload {
     const { domain } = this.pluginInfo.config;
     try {
       const { key } = ctx.fields;
+      if (
+        key &&
+        (key.includes('..') ||
+          key.includes('./') ||
+          key.includes('\\') ||
+          key.includes('//'))
+      ) {
+        throw new CoolCommException('非法的key值');
+      }
       if (_.isEmpty(ctx.files)) {
         throw new CoolCommException('上传文件为空');
       }
