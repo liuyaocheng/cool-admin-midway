@@ -19,7 +19,7 @@ import * as ProdConfig from './config/config.prod';
 import * as cool from '@cool-midway/core';
 import * as upload from '@midwayjs/upload';
 import * as task from '@cool-midway/task';
-import './modules/base/entity/base';
+// import * as rpc from '@cool-midway/rpc';
 
 @Configuration({
   imports: [
@@ -39,6 +39,8 @@ import './modules/base/entity/base';
     upload,
     // cool-admin 官方组件 https://cool-js.com
     cool,
+    // rpc 微服务 远程调用
+    // rpc,
     // 任务与队列
     task,
     {
