@@ -1,6 +1,6 @@
 import { DemoGoodsService } from '../../service/goods';
 import { DemoGoodsEntity } from '../../entity/goods';
-import { Body, Config, Inject, Post, Provide } from '@midwayjs/core';
+import { Body, Config, Get, Inject, Post, Provide } from '@midwayjs/core';
 import { CoolController, BaseController } from '@cool-midway/core';
 import { InjectEntityModel } from '@midwayjs/typeorm';
 import { Repository } from 'typeorm';
@@ -28,5 +28,11 @@ export class OpenDemoGoodsController extends BaseController {
   @Post('/entityPage', { summary: 'entity分页查询' })
   async entityPage(@Body() query) {
     return this.ok(await this.demoGoodsService.entityPage(query));
+  }
+
+  @Get('/test', { summary: '测试' })
+  async test() {
+    await this.demoGoodsService.test();
+    return this.ok('test');
   }
 }

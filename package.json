@@ -5,8 +5,8 @@
   "private": true,
   "dependencies": {
     "@cool-midway/core": "file:/Users/ap/Documents/src/admin/midway-packages/core",
-    "@cool-midway/task": "file:/Users/ap/Documents/src/admin/midway-packages/task",
     "@cool-midway/rpc": "file:/Users/ap/Documents/src/admin/midway-packages/rpc",
+    "@cool-midway/task": "file:/Users/ap/Documents/src/admin/midway-packages/task",
     "@midwayjs/bootstrap": "^3.20.0",
     "@midwayjs/cache-manager": "^3.20.0",
     "@midwayjs/core": "^3.20.0",

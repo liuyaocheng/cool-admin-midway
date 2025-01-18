@@ -195,6 +195,7 @@ export class BaseSysLoginService extends BaseService {
       username: user.username,
       userId: user.id,
       passwordVersion: user.passwordV,
+      tenantId: user['tenantId'],
     };
     if (isRefresh) {
       tokenInfo.isRefresh = true;

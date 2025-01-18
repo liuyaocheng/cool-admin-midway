@@ -13,6 +13,10 @@ export default {
   koa: {
     port: 8001,
   },
+  // 开启异步上下文管理
+  asyncContextManager: {
+    enable: true,
+  },
   // 静态文件配置
   staticFile: {
     buffer: true,

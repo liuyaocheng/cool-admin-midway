@@ -38,7 +38,7 @@ export default ({ app }) => {
       components: {
         schemas: {},
         securitySchemes: {
-          Auth: {
+          ApiKeyAuth: {
             type: 'apiKey',
             name: 'Authorization',
             in: 'header',

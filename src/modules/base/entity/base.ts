@@ -3,6 +3,7 @@ import {
   UpdateDateColumn,
   CreateDateColumn,
   PrimaryGeneratedColumn,
+  Column,
 } from 'typeorm';
 import { CoolBaseEntity } from '@cool-midway/core';
 
@@ -24,7 +25,7 @@ export abstract class BaseEntity extends CoolBaseEntity {
   @UpdateDateColumn({ comment: '更新时间' })
   updateTime: Date;
 
-  //   @Index()
-  //   @Column({ comment: '租户ID', nullable: true })
-  //   tenantId: number;
+  @Index()
+  @Column({ comment: '租户ID', nullable: true })
+  tenantId: number;
 }
