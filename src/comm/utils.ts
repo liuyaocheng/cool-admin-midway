@@ -150,4 +150,45 @@ export class Utils {
     }
     return camelCaseObject;
   }
+
+  /**
+   * 匹配URL
+   * @param pattern
+   * @param url
+   * @returns
+   */
+  matchUrl(pattern, url) {
+    // 将 pattern 和 url 按 `/` 分割
+    const patternParts = pattern.split('/').filter(Boolean);
+    const urlParts = url.split('/').filter(Boolean);
+    // 如果长度不匹配且 pattern 不包含 **，直接返回 false
+    if (patternParts.length !== urlParts.length && !pattern.includes('**')) {
+      return false;
+    }
+    for (let i = 0; i < patternParts.length; i++) {
+      const patternPart = patternParts[i];
+      const urlPart = urlParts[i];
+      // 如果 patternPart 是 **，匹配剩余的所有部分
+      if (patternPart === '**') {
+        return true;
+      }
+      // 如果 patternPart 以 : 开头，说明是参数，直接匹配任意非空值
+      if (patternPart.startsWith(':')) {
+        if (!urlPart) {
+          return false;
+        }
+        continue;
+      }
+      // 如果 patternPart 是 *，匹配任意非空部分
+      if (patternPart === '*') {
+        if (!urlPart) {
+          return false;
+        }
+      } else if (patternPart !== urlPart) {
+        return false;
+      }
+    }
+    // 如果 pattern 和 url 的部分数量一致，则匹配成功
+    return patternParts.length === urlParts.length;
+  }
 }

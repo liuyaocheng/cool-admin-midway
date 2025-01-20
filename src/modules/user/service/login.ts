@@ -230,6 +230,7 @@ export class UserLoginService extends BaseService {
         nickName: wxUserInfo.nickName,
         avatarUrl,
         gender: wxUserInfo.gender,
+        tenantId: userInfo['tenantId'],
       };
       await this.userInfoEntity.insert(userInfo);
     }

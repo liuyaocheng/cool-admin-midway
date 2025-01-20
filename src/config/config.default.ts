@@ -65,15 +65,19 @@ export default {
   cool: {
     // 已经插件化，本地文件上传查看 plugin/config.ts，其他云存储查看对应插件的使用
     file: {},
-    rpc: {
-      name: 'main',
+    // 是否开启多租户
+    tenant: {
+      // 是否开启多租户
+      enable: true,
+      // 需要过滤多租户的url
+      urls: [],
     },
-    // redis配置
-    redis: {
-      port: 6379,
-      host: '127.0.0.1',
-      password: '',
-      db: 0,
+    // 国际化配置
+    i18n: {
+      // 是否开启
+      enable: false,
+      // 语言
+      languages: ['zh-cn', 'zh-tw', 'en'],
     },
     // crud配置
     crud: {

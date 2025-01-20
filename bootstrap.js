@@ -1,4 +1,3 @@
-process.env.NODE_ENV = 'local';
 const { Bootstrap } = require('@midwayjs/bootstrap');
 
 // 显式以组件方式引入用户代码

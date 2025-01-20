@@ -8,7 +8,7 @@ import {
 import { CoolBaseEntity } from '@cool-midway/core';
 
 /**
- * 模型基类
+ * 实体基类
  */
 export abstract class BaseEntity extends CoolBaseEntity {
   // 默认自增

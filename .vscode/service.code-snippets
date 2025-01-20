@@ -2,7 +2,8 @@
   "service": {
     "prefix": "service",
     "body": [
-      "import { BaseService, Init, Provide } from '@cool-midway/core';",
+      "import { Init, Provide } from '@midwayjs/core';",
+      "import { BaseService } from '@cool-midway/core';",
       "import { InjectEntityModel } from '@midwayjs/typeorm';",
       "import { Repository } from 'typeorm';",
       "",

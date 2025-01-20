@@ -7,6 +7,7 @@ import {
   Inject,
   Logger,
 } from '@midwayjs/core';
+import { BaseTranslateService } from '../service/translate';
 
 /**
  * 导入菜单
@@ -25,6 +26,9 @@ export class BaseMenuEvent {
   @Inject()
   coolEventManager: CoolEventManager;
 
+  @Inject()
+  baseTranslateService: BaseTranslateService;
+
   @Event('onMenuImport')
   async onMenuImport(datas) {
     for (const module in datas) {
@@ -36,5 +40,11 @@ export class BaseMenuEvent {
       );
     }
     this.coolEventManager.emit('onMenuInit', {});
+    this.baseTranslateService.check();
+  }
+
+  @Event('onServerReady')
+  async onServerReady() {
+    this.baseTranslateService.loadTranslations();
   }
 }
