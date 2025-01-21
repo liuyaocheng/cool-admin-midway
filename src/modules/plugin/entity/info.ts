@@ -1,7 +1,5 @@
 import { BaseEntity } from '../../base/entity/base';
-import { Column, Entity, DataSource, Index } from 'typeorm';
-
-console.log(DataSource);
+import { Column, Entity, Index } from 'typeorm';
 
 /**
  * 插件信息

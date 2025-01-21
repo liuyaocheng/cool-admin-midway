@@ -30,7 +30,7 @@ export class BaseTranslateMiddleware
   resolve() {
     return async (ctx, next: NextFunction) => {
       const url = ctx.url;
-      const language = 'en';
+      const language = ctx.get('language');
       let data;
       try {
         data = await next();
@@ -58,13 +58,53 @@ export class BaseTranslateMiddleware
       }
       // 处理菜单翻译
       if (url == '/admin/base/comm/permmenu') {
-        console.log(data);
         for (const menu of data.data.menus) {
           if (menu.name) {
             menu.name = await this.baseTranslateService.translate(
               'menu',
               language,
               menu.name
+            );
+          }
+        }
+      }
+      if (url == '/admin/base/sys/menu/list') {
+        for (const menu of data.data) {
+          if (menu.name) {
+            menu.name = await this.baseTranslateService.translate(
+              'menu',
+              language,
+              menu.name
+            );
+          }
+        }
+      }
+      // 处理字典翻译
+      if (url == '/admin/dict/info/list') {
+        for (const dict of data.data) {
+          dict.name = await this.baseTranslateService.translate(
+            'dict:info',
+            language,
+            dict.name
+          );
+        }
+      }
+      if (url == '/admin/dict/type/page') {
+        for (const dict of data.data.list) {
+          dict.name = await this.baseTranslateService.translate(
+            'dict:type',
+            language,
+            dict.name
+          );
+        }
+      }
+      if (url == '/admin/dict/info/data' || url == '/app/dict/info/data') {
+        for (const key in data.data) {
+          for (const item of data.data[key]) {
+            item.name = await this.baseTranslateService.translate(
+              'dict:info',
+              language,
+              item.name
             );
           }
         }

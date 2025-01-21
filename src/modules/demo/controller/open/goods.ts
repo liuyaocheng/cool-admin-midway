@@ -12,6 +12,9 @@ import { Repository } from 'typeorm';
   api: ['add', 'delete', 'update', 'info', 'list', 'page'],
   entity: DemoGoodsEntity,
   service: DemoGoodsService,
+  pageQueryOp: {
+    fieldLike: ['title'],
+  },
 })
 export class OpenDemoGoodsController extends BaseController {
   @InjectEntityModel(DemoGoodsEntity)

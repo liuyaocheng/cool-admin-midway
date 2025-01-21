@@ -24,6 +24,12 @@ export class DemoGoodsEntity extends BaseEntity {
   @Column({ comment: '主图', nullable: true })
   mainImage: string;
 
+  @Column({ comment: '分类', dict: 'goodsType' })
+  type: number;
+
+  @Column({ comment: '状态', dict: ['禁用', '启用'], default: 1 })
+  status: number;
+
   @Column({ comment: '示例图', nullable: true, type: 'json' })
   exampleImages: string[];
 

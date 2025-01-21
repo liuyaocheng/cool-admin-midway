@@ -75,7 +75,7 @@ export default {
     // 国际化配置
     i18n: {
       // 是否开启
-      enable: false,
+      enable: true,
       // 语言
       languages: ['zh-cn', 'zh-tw', 'en'],
     },
