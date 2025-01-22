@@ -34,4 +34,16 @@ export class UserInfoEntity extends BaseEntity {
 
   @Column({ comment: '密码', nullable: true })
   password: string;
+
+  @Column({ comment: '介绍', type: 'text', nullable: true })
+  description: string;
+
+  @Column({
+    comment: '余额',
+    type: 'decimal',
+    precision: 10,
+    scale: 2,
+    default: 0,
+  })
+  balance: number;
 }
