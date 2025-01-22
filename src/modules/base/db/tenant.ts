@@ -94,7 +94,7 @@ export class TenantSubscriber implements EntitySubscriberInterface<any> {
   getTenantId(): number | undefined {
     let ctx, url, tenantId;
     ctx = this.getCtx();
-    if (!ctx || this.checkHandler()) return undefined;
+    if (!ctx || !this.checkHandler()) return undefined;
     url = ctx?.url;
 
     if (_.startsWith(url, '/admin/')) {

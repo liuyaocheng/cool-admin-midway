@@ -56,3 +56,11 @@ export const pPluginPath = () => {
 export const pSqlitePath = () => {
   return path.join(pDataPath(), 'cool.sqlite');
 };
+
+/**
+ * 缓存目录
+ * @returns
+ */
+export const pCachePath = () => {
+  return path.join(pDataPath(), 'cache');
+};

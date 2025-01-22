@@ -19,7 +19,8 @@ export default {
         // 打印日志
         logging: true,
         // 实体路径
-        entities,
+        entities: ['**/modules/*/entity'],
+        // 订阅者
         subscribers: [TenantSubscriber],
       },
       // default: {

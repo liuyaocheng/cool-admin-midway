@@ -56,6 +56,7 @@ export class DictInfoService extends BaseService {
         const value = e.value ? Number(e.value) : e.value;
         return {
           ...e,
+          // @ts-ignore
           value: isNaN(value) ? e.value : value,
         };
       });

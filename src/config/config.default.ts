@@ -2,7 +2,7 @@ import { CoolConfig } from '@cool-midway/core';
 import { MidwayConfig } from '@midwayjs/core';
 import { CoolCacheStore } from '@cool-midway/core';
 import * as path from 'path';
-import { pUploadPath } from '../comm/path';
+import { pCachePath, pUploadPath } from '../comm/path';
 
 // redis缓存
 // import { redisStore } from 'cache-manager-ioredis-yet';
@@ -42,7 +42,7 @@ export default {
       default: {
         store: CoolCacheStore,
         options: {
-          path: 'cache',
+          path: pCachePath(),
           ttl: 0,
         },
       },
@@ -68,14 +68,14 @@ export default {
     // 是否开启多租户
     tenant: {
       // 是否开启多租户
-      enable: true,
+      enable: false,
       // 需要过滤多租户的url, 支持通配符， 如/admin/**/* 表示admin模块下的所有接口都进行多租户过滤
       urls: [],
     },
     // 国际化配置
     i18n: {
       // 是否开启
-      enable: true,
+      enable: false,
       // 语言
       languages: ['zh-cn', 'zh-tw', 'en'],
     },

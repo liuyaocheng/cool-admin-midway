@@ -2,6 +2,7 @@ import { CoolConfig } from '@cool-midway/core';
 import { MidwayConfig } from '@midwayjs/core';
 import { entities } from '../entities';
 import { pSqlitePath } from '../comm/path';
+import { TenantSubscriber } from '../modules/base/db/tenant';
 /**
  * 本地开发 npm run prod 读取的配置文件
  */
@@ -13,11 +14,13 @@ export default {
         // 数据库文件地址
         database: pSqlitePath(),
         // 自动建表 注意：线上部署的时候不要使用，有可能导致数据丢失
-        synchronize: false,
+        synchronize: true,
         // 打印日志
-        logging: false,
+        logging: true,
         // 实体路径
         entities,
+        // 订阅者
+        subscribers: [TenantSubscriber],
       },
     },
   },
