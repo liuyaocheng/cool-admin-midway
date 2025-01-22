@@ -9,9 +9,9 @@ import { DemoGoodsEntity } from '../../../demo/entity/goods';
   api: ['add', 'delete', 'update', 'info', 'list', 'page'],
   entity: UserInfoEntity,
   pageQueryOp: {
-    fieldEq: ['status', 'gender', 'loginType'],
+    fieldEq: ['a.status', 'a.gender', 'a.loginType'],
     fieldLike: ['b.title'],
-    keyWordLikeFields: ['nickName', 'phone'],
+    keyWordLikeFields: ['a.nickName', 'a.phone'],
     select: ['a.*', 'b.title as goodsName'],
     join: [
       {

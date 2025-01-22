@@ -6,8 +6,18 @@ import { DemoTenantService } from '../../service/tenant';
  * 多租户
  */
 @CoolController({
-  api: [],
+  serviceApis: [
+    'use',
+    {
+      method: 'noUse',
+      summary: '不使用多租户',
+    },
+    {
+      method: 'noTenant',
+      summary: '局部不使用多租户',
+    },
+  ],
   entity: DemoGoodsEntity,
   service: DemoTenantService,
 })
-export class OpenDemoTenantController extends BaseController {}
+export class AdminDemoTenantController extends BaseController {}

@@ -78,6 +78,9 @@ export class BaseTranslateService {
    * 加载翻译文件到内存
    */
   async loadTranslations() {
+    if (!(this.config?.enable && this.app.getEnv() == 'local')) {
+      return;
+    }
     if (!this.basePath) {
       this.basePath = path.join(this.app.getBaseDir(), '..', 'src', 'locales');
     }
@@ -195,7 +198,7 @@ export class BaseTranslateService {
    * 检查翻译
    */
   async check() {
-    if (this.config?.enable) {
+    if (this.config?.enable && this.app.getEnv() == 'local') {
       this.basePath = path.join(this.app.getBaseDir(), '..', 'src', 'locales');
 
       const menuLockExists = this.checkLockFile('menu');

@@ -116,7 +116,9 @@ export class TenantSubscriber implements EntitySubscriberInterface<any> {
     if (!this.tenant.enable) return;
     const tenantId = this.getTenantId();
     if (tenantId) {
-      queryBuilder.where('tenantId = :tenantId', { tenantId });
+      queryBuilder.where(`${queryBuilder.alias}.tenantId = :tenantId`, {
+        tenantId,
+      });
     }
   }
 

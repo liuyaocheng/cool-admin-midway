@@ -68,7 +68,7 @@ export default {
     // 是否开启多租户
     tenant: {
       // 是否开启多租户
-      enable: false,
+      enable: true,
       // 需要过滤多租户的url, 支持通配符， 如/admin/**/* 表示admin模块下的所有接口都进行多租户过滤
       urls: [],
     },
