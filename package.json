@@ -4,9 +4,9 @@
   "description": "一个很酷的Ai快速开发框架",
   "private": true,
   "dependencies": {
-    "@cool-midway/core": "file:/Users/ap/Documents/src/admin/midway-packages/core",
-    "@cool-midway/rpc": "file:/Users/ap/Documents/src/admin/midway-packages/rpc",
-    "@cool-midway/task": "file:/Users/ap/Documents/src/admin/midway-packages/task",
+    "@cool-midway/core": "8.0.0-beta.1",
+    "@cool-midway/rpc": "8.0.0-beta.2",
+    "@cool-midway/task": "8.0.0-beta.2",
     "@midwayjs/bootstrap": "^3.20.0",
     "@midwayjs/cache-manager": "^3.20.0",
     "@midwayjs/core": "^3.20.0",
@@ -32,7 +32,7 @@
     "sqlite3": "^5.1.7",
     "svg-captcha": "^1.4.0",
     "tslib": "^2.8.1",
-    "typeorm": "file:/Users/ap/Documents/src/admin/midway-packages/typeorm",
+    "typeorm": "npm:@cool-midway/typeorm@8.0.0-beta.1",
     "uuid": "^11.0.5",
     "ws": "^8.18.0"
   },
@@ -76,7 +76,7 @@
     "assets": [
       "public/**/*",
       "typings/**/*",
-      "node_modules/sqlite3/**/*"
+      "node_modules/sqlite3/build/Release/node_sqlite3.node"
     ],
     "targets": [
       "node18-macos-x64",
