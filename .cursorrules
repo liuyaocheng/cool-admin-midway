@@ -1,0 +1,286 @@
+# 项目背景
+- 数据库：MySQL、Sqlite、Postgres、Typeorm
+- 语言：TypeScript、JavaScript、CommonJS
+- 框架：Koa.js、midway.js、cool-admin-midway
+- 项目版本：8.x
+
+# 目录
+项目目录：
+ ├── .vscode(代码片段，根据关键字可以快速地生成代码)
+ ├── public(静态资源文件，如js、css或者上传的文件)
+ ├── src
+ │   └── comm(通用库)
+ │   └── modules(项目模块)
+ │   └── config
+ │   │    └── config.default.ts(默认配置，不区分环境，都生效)
+ │   │    └── config.local.ts(本地开发配置，对应npm run dev)
+ │   │    └── config.prod.ts(生产环境配置，对应npm run start)
+ │   └── configuration.ts(midway的配置文件)
+ │   └── welcome.ts(环境的controller)
+ │   └── interface.ts(类型声明)
+ ├── package.json(依赖管理，项目信息)
+ ├── bootstrap.js(生产环境启动入口文件，可借助pm2等工具多进程启动)
+ └── ...
+
+ 模块目录
+ ├── modules
+ │   └── base(基础的权限管理系统)
+ │   │    └── controller(api接口)
+ │   │    └── dto(参数校验)
+ │   │    └── entity(实体类)
+ │   │    └── middleware(中间件)
+ │   │    └── schedule(定时任务)
+ │   │    └── service(服务，写业务逻辑)
+ │   │    └── config.ts(必须，模块的配置)
+ │   │    └── db.json(可选，初始化该模块的数据)
+ │   │    └── menu.json(可选，初始化该模块的菜单)
+
+# 核心
+
+- Controller
+
+```ts
+import { Get, Provide } from "@midwayjs/core";
+import { CoolController, BaseController } from "@cool-midway/core";
+import { BaseSysUserEntity } from "../../../base/entity/sys/user";
+import { DemoAppGoodsEntity } from "../../entity/goods";
+
+/**
+ * 商品
+ */
+@Provide()
+@CoolController({
+  // 添加通用CRUD接口
+  api: ["add", "delete", "update", "info", "list", "page"],
+  // 设置表实体
+  entity: DemoAppGoodsEntity,
+  // 向表插入当前登录用户ID
+  insertParam: (ctx) => {
+    return {
+      // 获得当前登录的后台用户ID，需要请求头传Authorization参数
+      userId: ctx.admin.userId,
+    };
+  },
+  // 操作crud之前做的事情 @cool-midway/core@3.2.14 新增
+  before: (ctx) => {
+    // 将前端的数据转JSON格式存数据库
+    const { data } = ctx.request.body;
+    ctx.request.body.data = JSON.stringify(data);
+  },
+  // info接口忽略价格字段
+  infoIgnoreProperty: ["a.price"],
+  // 分页查询配置
+  pageQueryOp: {
+    // 让title字段支持模糊查询
+    keyWordLikeFields: ["a.title"],
+    // 让type字段支持筛选，请求筛选字段与表字段一致是情况
+    fieldEq: ["a.type"],
+    // 多表关联，请求筛选字段与表字段不一致的情况
+    fieldEq: [{ column: "a.id", requestParam: "id" }],
+    // 指定返回字段，注意多表查询这个是必要的，否则会出现重复字段的问题
+    select: ["a.*", "b.name", "a.name AS userName"],
+    // 4.x置为过时 改用 join 关联表用户表
+    leftJoin: [
+      {
+        entity: BaseSysUserEntity,
+        alias: "b",
+        condition: "a.userId = b.id",
+      },
+    ],
+    // 4.x新增
+    join: [
+      {
+        entity: BaseSysUserEntity,
+        alias: "b",
+        condition: "a.userId = b.id",
+        type: "innerJoin",
+      },
+    ],
+    // 4.x 新增 追加其他条件
+    extend: async (find: SelectQueryBuilder<DemoGoodsEntity>) => {
+      find.groupBy("a.id");
+    },
+    // 增加其他条件
+    where: async (ctx) => {
+      // 获取body参数
+      const { a } = ctx.request.body;
+      return [
+        // 价格大于90
+        ["a.price > :price", { price: 90.0 }],
+        // 满足条件才会执行
+        ["a.price > :price", { price: 90.0 }, "条件"],
+        // 多个条件一起
+        [
+          "(a.price = :price or a.userId = :userId)",
+          { price: 90.0, userId: ctx.admin.userId },
+        ],
+      ];
+    },
+    // 可选，添加排序，默认按createTime Desc排序
+    addOrderBy: {
+      price: "desc",
+    },
+  },
+})
+export class DemoAppGoodsController extends BaseController {
+  /**
+   * 其他接口
+   */
+  @Get("/other")
+  async other() {
+    return this.ok("hello, cool-admin!!!");
+  }
+}
+```
+
+注意：
+- CoolController的entity，alias 为 "a";
+- 如果是多表查询，必须设置 select 参数，否则会出现重复字段的错误，因为每个表都继承了 BaseEntity，至少都有 id、createTime、updateTime 三个相同的字段;
+- keyWordLikeFields、fieldEq等配置哪个字段，都需要有对应的别名；
+
+- Entity
+
+```ts
+// BaseEntity的路径是固定，不能修改
+import { BaseEntity } from '../../base/entity/base';
+import { Column, Entity, Index } from 'typeorm';
+
+/**
+ * demo模块-用户信息
+ */
+// 表名必须包含模块固定格式：模块_，
+@Entity('demo_user_info')
+// DemoUserInfoEntity是模块+表名+Entity
+export class DemoUserInfoEntity extends BaseEntity {
+  @Index()
+  @Column({ comment: '手机号', length: 11 })
+  phone: string;
+
+  @Index({ unique: true })
+  @Column({ comment: '身份证', length: 50 })
+  idCard: string;
+
+  // 生日只需要精确到哪一天，所以type:'date'，如果需要精确到时分秒,应为'datetime'
+  @Column({ comment: '生日', type: 'date' })
+  birthday: Date;
+
+  @Column({ comment: '状态', dict: ['禁用', '启用'], default: 1 })
+  status: number;
+  
+  @Column({ comment: '分类', dict: ['普通', '会员', '超级会员'], default: 0, type: 'tinyint' })
+  type: number;
+
+  // 由于labels的类型是一个数组，所以Column中的type类型必须得是'json'
+  @Column({ comment: '标签', nullable: true, type: 'json' })
+  labels: string[];
+
+  @Column({
+    comment: '余额',
+    type: 'decimal',
+    precision: 12,
+    scale: 2,
+  })
+  balance: number;
+
+  @Column({ comment: '备注', nullable: true })
+  remark: string;
+
+  @Column({ comment: '简介', type: 'text', nullable: true })
+  summary: string;
+  
+  @Column({ comment: '省', length: 50 })
+  province: string;
+
+  @Column({ comment: '市', length: 50 })
+  city: string;
+
+  @Column({ comment: '区', length: 50 })
+  district: string;
+
+  @Column({ comment: '详细地址', length: 255 })
+  address: string;
+}
+```
+注意：
+- 禁止使用外键，如ManyToOne、JoinColumn等；
+- comment需要简短，如班级表的名称不要叫班级名称，直接叫名称；
+- dict如果遇到可选项如：状态、类型等需要配置；
+- BaseEntity的路径是固定，不能修改；
+
+- Service
+
+```ts
+import { Init, Provide } from '@midwayjs/core';
+import { BaseService } from '@cool-midway/core';
+import { InjectEntityModel } from '@midwayjs/typeorm';
+import { Repository } from 'typeorm';
+
+/**
+ * 描述
+ */
+@Provide()
+export class XxxService extends BaseService {
+  @InjectEntityModel(实体)
+  xxxEntity: Repository<实体>;
+
+  // 获得ctx
+  @Inject()
+  ctx;
+
+  @Init()
+  async init() {
+    await super.init();
+    this.setEntity(this.xxxEntity);
+  }
+
+  /**
+   * 其它方法
+   */
+  async xxx() {}
+}
+```
+
+- 自动路由
+
+规则： /controller 文件夹下的文件夹名或者文件名/模块文件夹名/方法名
+// 模块目录
+├── modules
+│   └── demo(模块名)
+│   │    └── controller(api接口)
+│   │    │     └── app(参数校验)
+│   │    │     │     └── goods.ts(商品的controller)
+│   │    │     └── pay.ts(支付的controller)
+│   │    └── config.ts(必须，模块的配置)
+│   │    └── init.sql(可选，初始化该模块的sql)
+
+生成的路由前缀为： /pay/demo/xxx(具体的方法)与/app/demo/goods/xxx(具体的方法)
+
+- config.ts
+
+```ts
+import { ModuleConfig } from '@cool-midway/core';
+
+/**
+ * 模块配置
+ */
+export default () => {
+  return {
+    // 模块名称
+    name: 'xxx',
+    // 模块描述
+    description: 'xxx',
+    // 中间件，只对本模块有效
+    middlewares: [],
+    // 中间件，全局有效
+    globalMiddlewares: [],
+    // 模块加载顺序，默认为0，值越大越优先加载
+    order: 0,
+  } as ModuleConfig;
+};
+
+```
+
+# 其它
+- 根据需要进行必要的关联表查询；
+- 禁止出现import 但是没有使用的情况；
+- 所有代码需有类级注释；

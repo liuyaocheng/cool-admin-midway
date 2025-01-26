@@ -53,9 +53,6 @@ importers:
       '@midwayjs/validate':
         specifier: ^3.20.0
         version: 3.20.0
-      '@midwayjs/view-ejs':
-        specifier: ^3.20.0
-        version: 3.20.0
       adm-zip:
         specifier: ^0.5.16
         version: 0.5.16
@@ -65,6 +62,9 @@ importers:
       cron:
         specifier: ^3.5.0
         version: 3.5.0
+      deasync:
+        specifier: ^0.1.30
+        version: 0.1.30
       jsonwebtoken:
         specifier: ^9.0.2
         version: 9.0.2
@@ -738,14 +738,6 @@ packages:
 
   '@midwayjs/validate@3.20.0':
     resolution: {integrity: sha512-LCMna/wAz4LDRKyMQh8Uoh+2W4qhdNJ4frAX5gzrxIUbCN5uTbBpmqqYSLA/j24ItSye4htSdQ7r+H9WM+LUIw==}
-    engines: {node: '>=12'}
-
-  '@midwayjs/view-ejs@3.20.0':
-    resolution: {integrity: sha512-HyFAeE6UqmmY7mWDeMsTKXYOARBIAL4Ce9l28hjJudJxTokf514l9OeRpPyWCb6hwMJf/AKgqyYZBcGFLiXhNA==}
-    engines: {node: '>=12'}
-
-  '@midwayjs/view@3.20.0':
-    resolution: {integrity: sha512-rb8hrrfjnA0t7HFoiVb9JqCKzB/OULDbVRBy2gDy2EcnN1da7RtX7m7VU8hCAkqC7ClGDOOhghaYigmp/iVn6A==}
     engines: {node: '>=12'}
 
   '@msgpackr-extract/msgpackr-extract-darwin-arm64@3.0.3':
@@ -1645,6 +1637,10 @@ packages:
 
   dayjs@1.8.36:
     resolution: {integrity: sha512-3VmRXEtw7RZKAf+4Tv1Ym9AGeo8r8+CjDi26x+7SYQil1UqtqdaokhzoEJohqlzt0m5kacJSDhJQkG/LWhpRBw==}
+
+  deasync@0.1.30:
+    resolution: {integrity: sha512-OaAjvEQuQ9tJsKG4oHO9nV1UHTwb2Qc2+fadB0VeVtD0Z9wiG1XPGLJ4W3aLhAoQSYTaLROFRbd5X20Dkzf7MQ==}
+    engines: {node: '>=0.11.0'}
 
   debug@3.2.7:
     resolution: {integrity: sha512-CFjzYYAi4ThfiQvizrFQevTTXHtnCqWfe7x1AhgEscTz6ZbLbfoLRLPugTQyBth6f8ZERVUSyWHFD/7Wu4t1XQ==}
@@ -3400,6 +3396,9 @@ packages:
 
   node-abort-controller@3.1.1:
     resolution: {integrity: sha512-AGK2yQKIjRuqnc6VkX2Xj5d+QW8xZ87pa1UK6yA6ouUyuxfHuMP6umE5QK7UmTeOAymo+Zx1Fxiuw9rVx8taHQ==}
+
+  node-addon-api@1.7.2:
+    resolution: {integrity: sha512-ibPK3iA+vaY1eEjESkQkM0BbCqFOaZMiXRTtdB0u7b4djtY6JnsjvPdUHVMg6xQt3B8fpTTWHI9A+ADjM9frzg==}
 
   node-addon-api@7.1.1:
     resolution: {integrity: sha512-5m3bsyrjFWE1xf7nz7YXdN4udnVtXK6/Yfgn5qnahL6bCkf2yKt4k3nuTKAtT4r3IG8JNR2ncsIMdZuAzJjHQQ==}
@@ -5432,13 +5431,6 @@ snapshots:
       '@midwayjs/i18n': 3.20.0
       joi: 17.13.3
 
-  '@midwayjs/view-ejs@3.20.0':
-    dependencies:
-      '@midwayjs/view': 3.20.0
-      ejs: 3.1.10
-
-  '@midwayjs/view@3.20.0': {}
-
   '@msgpackr-extract/msgpackr-extract-darwin-arm64@3.0.3':
     optional: true
 
@@ -6510,6 +6502,11 @@ snapshots:
   dayjs@1.11.13: {}
 
   dayjs@1.8.36: {}
+
+  deasync@0.1.30:
+    dependencies:
+      bindings: 1.5.0
+      node-addon-api: 1.7.2
 
   debug@3.2.7:
     dependencies:
@@ -8506,6 +8503,8 @@ snapshots:
       semver: 7.6.3
 
   node-abort-controller@3.1.1: {}
+
+  node-addon-api@1.7.2: {}
 
   node-addon-api@7.1.1: {}
 

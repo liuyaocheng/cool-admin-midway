@@ -19,10 +19,10 @@
     "@midwayjs/typeorm": "^3.20.0",
     "@midwayjs/upload": "^3.20.0",
     "@midwayjs/validate": "^3.20.0",
-    "@midwayjs/view-ejs": "^3.20.0",
     "adm-zip": "^0.5.16",
     "axios": "^1.7.9",
     "cron": "^3.5.0",
+    "deasync": "^0.1.30",
     "jsonwebtoken": "^9.0.2",
     "lodash": "^4.17.21",
     "md5": "^2.3.0",
@@ -75,11 +75,10 @@
     ],
     "assets": [
       "public/**/*",
-      "typings/**/*",
-      "node_modules/sqlite3/build/Release/node_sqlite3.node"
+      "typings/**/*"
     ],
     "targets": [
-      "node20-win-x64"
+      "node20-macos-arm64"
     ],
     "outputPath": "build"
   },
