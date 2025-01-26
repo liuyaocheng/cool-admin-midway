@@ -1,5 +1,4 @@
 const net = require('net');
-const deasync = require('deasync');
 
 /**
  * 同步检查端口是否可用
@@ -27,7 +26,7 @@ function isPortAvailableSync(port) {
   server.listen(port);
 
   // 阻塞直到检查完成（checked === true）
-  deasync.loopWhile(() => !checked);
+  // deasync.loopWhile(() => !checked);
   return available;
 }
 
