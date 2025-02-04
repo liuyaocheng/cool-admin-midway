@@ -3,7 +3,7 @@ import { MidwayConfig } from '@midwayjs/core';
 import { CoolCacheStore } from '@cool-midway/core';
 import * as path from 'path';
 import { pCachePath, pUploadPath } from '../comm/path';
-import { checkPort } from '../comm/port';
+import { availablePort } from '../comm/port';
 
 // redis缓存
 // import { redisStore } from 'cache-manager-ioredis-yet';
@@ -12,7 +12,7 @@ export default {
   // 确保每个项目唯一，项目首次启动会自动生成
   keys: '576848ea-bb0c-4c0c-ac95-c8602ef908b5',
   koa: {
-    port: checkPort(8001),
+    port: availablePort(8001),
   },
   // 开启异步上下文管理
   asyncContextManager: {

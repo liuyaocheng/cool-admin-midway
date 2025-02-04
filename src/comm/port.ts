@@ -27,7 +27,7 @@ function isPortAvailableSync(port: number): boolean {
  * @param {number} startPort - 起始端口
  * @returns {number} - 可用的端口
  */
-export function checkPort(startPort: number): number {
+export function availablePort(startPort: number): number {
   let port = startPort;
   while (port <= 65535) {
     if (isPortAvailableSync(port)) {
