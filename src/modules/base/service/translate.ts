@@ -200,7 +200,6 @@ export class BaseTranslateService {
   async check() {
     if (this.config?.enable && this.app.getEnv() == 'local') {
       this.basePath = path.join(this.app.getBaseDir(), '..', 'src', 'locales');
-
       const menuLockExists = this.checkLockFile('menu');
       const msgLockExists = this.checkLockFile('msg');
       const dictLockExists = this.checkDictLockFile();
@@ -216,13 +215,21 @@ export class BaseTranslateService {
         if (!dictLockExists) {
           tasks.push(this.genBaseDict());
         }
-        await Promise.all(tasks);
-        this.logger.info('All translations completed successfully');
-        // 更新翻译映射
-        await this.loadTranslations();
-        await this.loadDictTranslations();
+        // 启动旋转动画
+        const spinner = ['|', '/', '-', '\\'];
+        let index = 0;
+        const interval = setInterval(() => {
+          process.stdout.write(`\r${spinner[index++]} i18n translate...`);
+          index %= spinner.length;
+        }, 200);
+        try {
+          await Promise.all(tasks);
+        } finally {
+          clearInterval(interval);
+          process.stdout.write('\r✅ i18n translate success！！！\n');
+        }
       } else {
-        this.logger.info('Translation lock files exist, skipping translation');
+        this.logger.debug('Translation lock files exist, skipping translation');
         // 直接加载翻译文件到内存
         await this.loadTranslations();
         await this.loadDictTranslations();
@@ -253,7 +260,7 @@ export class BaseTranslateService {
     try {
       // 检查是否存在锁文件
       if (this.checkDictLockFile()) {
-        this.logger.info('Dictionary lock file exists, skipping translation');
+        this.logger.debug('Dictionary lock file exists, skipping translation');
         return;
       }
 
@@ -286,7 +293,7 @@ export class BaseTranslateService {
       fs.writeFileSync(infoFile, infoText);
       fs.writeFileSync(typeFile, typeText);
 
-      this.logger.info('Base dictionary files generated successfully');
+      this.logger.debug('Base dictionary files generated successfully');
 
       // 翻译其他语言
       if (this.config?.enable && this.config.languages) {
@@ -307,7 +314,7 @@ export class BaseTranslateService {
         }
 
         await Promise.all(translatePromises);
-        this.logger.info('Dictionary translations completed successfully');
+        this.logger.debug('Dictionary translations completed successfully');
       }
 
       // 创建锁文件
@@ -373,7 +380,7 @@ export class BaseTranslateService {
     }
     const text = JSON.stringify(content, null, 2);
     fs.writeFileSync(file, text);
-    this.logger.info('base menu generate success');
+    this.logger.debug('base menu generate success');
     const translatePromises = [];
     for (const language of this.config.languages) {
       if (language !== 'zh-cn') {
@@ -435,7 +442,7 @@ export class BaseTranslateService {
     // 写入文件
     const text = JSON.stringify(messages, null, 2);
     fs.writeFileSync(file, text);
-    this.logger.info('base msg generate success');
+    this.logger.debug('base msg generate success');
 
     const translatePromises = [];
     for (const language of this.config.languages) {
@@ -468,7 +475,7 @@ export class BaseTranslateService {
     dirPath: string,
     type: 'menu' | 'msg' | 'dict' = 'msg'
   ) {
-    this.logger.info(`${type} ${language} translate start`);
+    this.logger.debug(`${type} ${language} translate start`);
     const response = await axios.post(I18N.DEFAULT_SERVICE_URL, {
       label: 'i18n-node',
       params: {
@@ -479,6 +486,6 @@ export class BaseTranslateService {
     });
     const file = path.join(dirPath, `${language}.json`);
     fs.writeFileSync(file, response.data.data.result.data);
-    this.logger.info(`${type} ${language} translate success`);
+    this.logger.debug(`${type} ${language} translate success`);
   }
 }
