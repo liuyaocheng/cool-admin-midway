@@ -1,4 +1,4 @@
-import { Body, Inject, Post, Provide } from '@midwayjs/core';
+import { Body, Get, Inject, Post, Provide } from '@midwayjs/core';
 import {
   CoolController,
   BaseController,
@@ -22,5 +22,11 @@ export class AppDictInfoController extends BaseController {
   @Post('/data', { summary: '获得字典数据' })
   async data(@Body('types') types: string[] = []) {
     return this.ok(await this.dictInfoService.data(types));
+  }
+
+  @CoolTag(TagTypes.IGNORE_TOKEN)
+  @Get('/types', { summary: '获得所有字典类型' })
+  async types() {
+    return this.ok(await this.dictInfoService.types());
   }
 }
