@@ -8,14 +8,19 @@ import { execSync } from 'child_process';
 function isPortAvailableSync(port: number): boolean {
   try {
     if (process.platform === 'win32') {
-      // Windows 使用 netstat 检查端口
-      execSync(`netstat -ano | findstr :${port}`, { stdio: 'ignore' });
+      // Windows 使用 netstat 检查端口，排除 TIME_WAIT 状态
+      const result = execSync(`netstat -ano | findstr :${port}`, {
+        encoding: 'utf-8',
+      });
+      // 如果端口只处于 TIME_WAIT 状态，则认为端口可用
+      return !result || result.toLowerCase().includes('time_wait');
     } else {
-      // Linux/Mac 使用 lsof 检查端口
-      execSync(`lsof -i :${port}`, { stdio: 'ignore' });
+      // Linux/Mac 使用 lsof 检查端口，只检查 LISTEN 状态
+      const result = execSync(`lsof -i :${port} -sTCP:LISTEN`, {
+        encoding: 'utf-8',
+      });
+      return !result;
     }
-    // 命令执行成功，端口被占用
-    return false;
   } catch (error) {
     // 命令执行失败，端口可用
     return true;
