@@ -227,7 +227,6 @@ export class TaskLocalService extends BaseService {
    */
   async initTask() {
     try {
-      await this.utils.sleep(3000);
       this.logger.info('init local task....');
       const runningTasks = await this.taskInfoEntity.findBy({ status: 1 });
       if (!_.isEmpty(runningTasks)) {
