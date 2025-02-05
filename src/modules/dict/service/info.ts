@@ -65,6 +65,14 @@ export class DictInfoService extends BaseService {
   }
 
   /**
+   * 获得字典key
+   * @returns
+   */
+  async types() {
+    return await this.dictTypeEntity.find();
+  }
+
+  /**
    * 获得单个或多个字典值
    * @param value 字典值或字典值数组
    * @param key 字典类型
