@@ -1,8 +1,7 @@
 import { CoolController, BaseController } from '@cool-midway/core';
 import { DemoGoodsEntity } from '../../entity/goods';
-import { Get, Inject } from '@midwayjs/core';
-import { DemoGoodsService } from '../../service/goods';
 import { UserInfoEntity } from '../../../user/entity/info';
+import { DemoGoodsService } from '../../service/goods';
 
 /**
  * 商品模块-商品信息
@@ -10,6 +9,7 @@ import { UserInfoEntity } from '../../../user/entity/info';
 @CoolController({
   api: ['add', 'delete', 'update', 'info', 'list', 'page'],
   entity: DemoGoodsEntity,
+  service: DemoGoodsService,
   pageQueryOp: {
     keyWordLikeFields: ['a.description'],
     fieldEq: ['a.status'],
@@ -24,13 +24,4 @@ import { UserInfoEntity } from '../../../user/entity/info';
     ],
   },
 })
-export class AdminDemoGoodsController extends BaseController {
-  @Inject()
-  demoGoodsService: DemoGoodsService;
-
-  @Get('/test', { summary: '测试' })
-  async test() {
-    await this.demoGoodsService.test();
-    return this.ok('test');
-  }
-}
+export class AdminDemoGoodsController extends BaseController {}

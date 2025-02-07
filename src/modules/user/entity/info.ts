@@ -29,21 +29,9 @@ export class UserInfoEntity extends BaseEntity {
   @Column({ comment: '登录方式', dict: ['小程序', '公众号', 'H5'], default: 0 })
   loginType: number;
 
-  @Column({ comment: '来源', dict: 'sourceType', default: 0 })
-  source: number;
-
   @Column({ comment: '密码', nullable: true })
   password: string;
 
   @Column({ comment: '介绍', type: 'text', nullable: true })
   description: string;
-
-  @Column({
-    comment: '余额',
-    type: 'decimal',
-    precision: 10,
-    scale: 2,
-    default: 0,
-  })
-  balance: number;
 }

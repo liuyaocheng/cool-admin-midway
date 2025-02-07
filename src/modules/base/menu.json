@@ -4,7 +4,7 @@
         "router": "/sys",
         "perms": null,
         "type": 0,
-        "icon": "icon-system",
+        "icon": "icon-set",
         "orderNum": 2,
         "viewPath": null,
         "keepAlive": true,
@@ -834,20 +834,100 @@
         "isShow": true,
         "childMenus": [
             {
-                "name": "后端插件",
-                "router": "/helper/plugins/serve",
+                "tenantId": null,
+                "name": "插件列表",
+                "router": "/helper/plugins",
                 "perms": null,
                 "type": 1,
-                "icon": "icon-component",
-                "orderNum": 2,
-                "viewPath": "modules/helper/views/plugins/serve.vue",
+                "icon": "icon-list",
+                "orderNum": 1,
+                "viewPath": "modules/helper/views/plugins.vue",
                 "keepAlive": true,
                 "isShow": true,
                 "childMenus": [
                     {
-                        "name": "权限",
+                        "tenantId": null,
+                        "name": "删除",
                         "router": null,
-                        "perms": "plugin:info:install,plugin:info:delete,plugin:info:update,plugin:info:page,plugin:info:info",
+                        "perms": "plugin:info:delete",
+                        "type": 2,
+                        "icon": null,
+                        "orderNum": 0,
+                        "viewPath": null,
+                        "keepAlive": true,
+                        "isShow": true,
+                        "childMenus": []
+                    },
+                    {
+                        "tenantId": null,
+                        "name": "分页查询",
+                        "router": null,
+                        "perms": "plugin:info:page",
+                        "type": 2,
+                        "icon": null,
+                        "orderNum": 0,
+                        "viewPath": null,
+                        "keepAlive": true,
+                        "isShow": true,
+                        "childMenus": []
+                    },
+                    {
+                        "tenantId": null,
+                        "name": "单个信息",
+                        "router": null,
+                        "perms": "plugin:info:info",
+                        "type": 2,
+                        "icon": null,
+                        "orderNum": 0,
+                        "viewPath": null,
+                        "keepAlive": true,
+                        "isShow": true,
+                        "childMenus": []
+                    },
+                    {
+                        "tenantId": null,
+                        "name": "安装插件",
+                        "router": null,
+                        "perms": "plugin:info:install",
+                        "type": 2,
+                        "icon": null,
+                        "orderNum": 0,
+                        "viewPath": null,
+                        "keepAlive": true,
+                        "isShow": true,
+                        "childMenus": []
+                    },
+                    {
+                        "tenantId": null,
+                        "name": "修改",
+                        "router": null,
+                        "perms": "plugin:info:update",
+                        "type": 2,
+                        "icon": null,
+                        "orderNum": 0,
+                        "viewPath": null,
+                        "keepAlive": true,
+                        "isShow": true,
+                        "childMenus": []
+                    },
+                    {
+                        "tenantId": null,
+                        "name": "列表查询",
+                        "router": null,
+                        "perms": "plugin:info:list",
+                        "type": 2,
+                        "icon": null,
+                        "orderNum": 0,
+                        "viewPath": null,
+                        "keepAlive": true,
+                        "isShow": true,
+                        "childMenus": []
+                    },
+                    {
+                        "tenantId": null,
+                        "name": "新增",
+                        "router": null,
+                        "perms": "plugin:info:add",
                         "type": 2,
                         "icon": null,
                         "orderNum": 0,
@@ -857,18 +937,6 @@
                         "childMenus": []
                     }
                 ]
-            },
-            {
-                "name": "前端插件",
-                "router": "/helper/plugins/vue",
-                "perms": null,
-                "type": 1,
-                "icon": "icon-vue",
-                "orderNum": 1,
-                "viewPath": "modules/helper/views/plugins/vue.vue",
-                "keepAlive": true,
-                "isShow": true,
-                "childMenus": []
             }
         ]
     }

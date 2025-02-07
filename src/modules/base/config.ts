@@ -16,7 +16,7 @@ export default () => {
     globalMiddlewares: [
       BaseTranslateMiddleware,
       BaseAuthorityMiddleware,
-      // BaseLogMiddleware,
+      BaseLogMiddleware,
     ],
     // 模块加载顺序，默认为0，值越大越优先加载
     order: 10,

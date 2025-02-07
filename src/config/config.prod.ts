@@ -3,6 +3,7 @@ import { MidwayConfig } from '@midwayjs/core';
 import { entities } from '../entities';
 import { pSqlitePath } from '../comm/path';
 import { TenantSubscriber } from '../modules/base/db/tenant';
+
 /**
  * 本地开发 npm run prod 读取的配置文件
  */

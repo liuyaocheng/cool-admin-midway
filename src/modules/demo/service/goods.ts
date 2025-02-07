@@ -3,7 +3,6 @@ import { Inject, Provide } from '@midwayjs/core';
 import { BaseService } from '@cool-midway/core';
 import { InjectEntityModel } from '@midwayjs/typeorm';
 import { Repository } from 'typeorm';
-import { noTenant } from '../../base/db/tenant';
 
 /**
  * 商品示例
@@ -40,15 +39,5 @@ export class DemoGoodsService extends BaseService {
   async entityPage(query) {
     const find = this.demoGoodsEntity.createQueryBuilder();
     return this.entityRenderPage(find, query);
-  }
-
-  async test() {
-    const a = await this.demoGoodsEntity.createQueryBuilder().getMany();
-    await noTenant(this.ctx, async () => {
-      const b = await this.demoGoodsEntity.createQueryBuilder().getMany();
-      console.log('b');
-    });
-    const c = await this.demoGoodsEntity.createQueryBuilder().getMany();
-    console.log(a);
   }
 }

@@ -39,7 +39,7 @@ export class BaseTranslateMiddleware
         // 处理翻译消息
         if (error.name == 'CoolCommException') {
           if (language && error.message && error.message !== 'success') {
-            ctx.status = 200;
+            ctx.status = error.statusCode || 200;
             ctx.body = {
               code: RESCODE.COMMFAIL,
               message: await this.baseTranslateService.translate(

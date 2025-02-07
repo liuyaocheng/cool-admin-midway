@@ -3,7 +3,6 @@ import { BaseService } from '@cool-midway/core';
 import { InjectEntityModel } from '@midwayjs/typeorm';
 import { Repository } from 'typeorm';
 import { DemoGoodsEntity } from '../entity/goods';
-import { UserInfoEntity } from '../../user/entity/info';
 import { noTenant } from '../../base/db/tenant';
 
 /**

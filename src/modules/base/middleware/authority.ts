@@ -58,7 +58,7 @@ export class BaseAuthorityMiddleware
           ctx.admin.tenantId = 1;
           if (ctx.admin.isRefresh) {
             ctx.status = 401;
-            throw new CoolCommException('登录失效~');
+            throw new CoolCommException('登录失效~', ctx.status);
           }
         } catch (error) {}
         // 使用matchUrl方法来检查URL是否应该被忽略
@@ -78,14 +78,12 @@ export class BaseAuthorityMiddleware
             `admin:passwordVersion:${ctx.admin.userId}`
           );
           if (passwordV != ctx.admin.passwordVersion) {
-            ctx.status = 401;
-            throw new CoolCommException('登录失效~');
+            throw new CoolCommException('登录失效~', 401);
           }
           // 超管拥有所有权限
           if (ctx.admin.username == 'admin' && !ctx.admin.isRefresh) {
             if (rToken !== token && this.jwtConfig.jwt.sso) {
-              ctx.status = 401;
-              throw new CoolCommException('登录失效~');
+              throw new CoolCommException('登录失效~', 401);
             } else {
               await next();
               return;
@@ -102,12 +100,10 @@ export class BaseAuthorityMiddleware
           }
           // 如果传的token是refreshToken则校验失败
           if (ctx.admin.isRefresh) {
-            ctx.status = 401;
-            throw new CoolCommException('登录失效~');
+            throw new CoolCommException('登录失效~', 401);
           }
           if (!rToken) {
-            ctx.status = 401;
-            throw new CoolCommException('登录失效或无权限访问~');
+            throw new CoolCommException('登录失效或无权限访问~', 401);
           }
           if (rToken !== token && this.jwtConfig.jwt.sso) {
             statusCode = 401;
@@ -130,8 +126,7 @@ export class BaseAuthorityMiddleware
           statusCode = 401;
         }
         if (statusCode > 200) {
-          ctx.status = statusCode;
-          throw new CoolCommException('登录失效或无权限访问~');
+          throw new CoolCommException('登录失效或无权限访问~', statusCode);
         }
       }
       await next();
