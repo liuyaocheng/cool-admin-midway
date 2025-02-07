@@ -9,6 +9,7 @@ import { BaseSysUserRoleEntity } from '../../entity/sys/user_role';
 import * as md5 from 'md5';
 import { BaseSysDepartmentEntity } from '../../entity/sys/department';
 import { CachingFactory, MidwayCache } from '@midwayjs/cache-manager';
+import { BaseSysRoleEntity } from '../../entity/sys/role';
 
 /**
  * 系统用户
@@ -70,15 +71,15 @@ export class BaseSysUserService extends BaseService {
     // 匹配角色
     if (!_.isEmpty(result.list)) {
       const userIds = result.list.map(e => e.id);
-      const roles = await this.nativeQuery(
+      const roles: BaseSysRoleEntity[] = await this.nativeQuery(
         'SELECT b.name, a.userId FROM base_sys_user_role a LEFT JOIN base_sys_role b ON a.roleId = b.id WHERE a.userId in (?) ',
         [userIds]
       );
       result.list.forEach(e => {
-        e['roleName'] = roles
-          .filter(role => role.userId == e.id)
-          .map(role => role.name)
-          .join(',');
+        const arr = roles.filter(a => a.userId == e.id);
+
+        e['roleIds'] = arr.map(a => a.userId);
+        e['roleName'] = arr.map(a => a.name).join(',');
       });
     }
     return result;
