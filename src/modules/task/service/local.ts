@@ -308,6 +308,10 @@ export class TaskLocalService extends BaseService {
    * 执行器
    */
   async executor(task: any): Promise<void> {
+    // 如果不是开始时间之后的 则不执行
+    if (task.startDate && moment(task.startDate).isAfter(moment())) {
+      return;
+    }
     try {
       const currentTime = moment();
       const lockExpireTime = moment().add(5, 'minutes');

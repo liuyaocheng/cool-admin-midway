@@ -78,7 +78,7 @@ export class BaseTranslateService {
    * 加载翻译文件到内存
    */
   async loadTranslations() {
-    if (!(this.config?.enable && this.app.getEnv() == 'local')) {
+    if (!this.config?.enable) {
       return;
     }
     if (!this.basePath) {
