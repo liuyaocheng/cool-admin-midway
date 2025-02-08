@@ -3,7 +3,6 @@ import { App, IMidwayApplication, Inject, Provide } from '@midwayjs/core';
 import { InjectEntityModel } from '@midwayjs/typeorm';
 import * as fs from 'fs';
 import * as path from 'path';
-import * as prettier from 'prettier';
 import { Repository } from 'typeorm';
 import * as ts from 'typescript';
 import { Utils } from '../../../comm/utils';
@@ -222,6 +221,7 @@ export class PluginTypesService extends BaseService {
    */
   async formatContent(content: string) {
     // 使用prettier格式化内容
+    const prettier = require('prettier');
     return prettier.format(content, {
       parser: 'typescript',
       singleQuote: true,
