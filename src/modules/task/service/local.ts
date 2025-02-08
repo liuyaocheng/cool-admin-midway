@@ -7,7 +7,7 @@ import {
   Scope,
   ScopeEnum,
 } from '@midwayjs/core';
-import { BaseService } from '@cool-midway/core';
+import { BaseService, CoolEventManager } from '@cool-midway/core';
 import { InjectEntityModel } from '@midwayjs/typeorm';
 import { Equal, LessThan, Repository } from 'typeorm';
 import { TaskInfoEntity } from '../entity/info';
@@ -44,6 +44,9 @@ export class TaskLocalService extends BaseService {
   @Config('task.log.keepDays')
   keepDays: number;
 
+  @Inject()
+  coolEventManager: CoolEventManager;
+
   // 存储所有运行的任务
   private cronJobs: Map<string, CronJob.CronJob> = new Map();
 
@@ -53,14 +56,23 @@ export class TaskLocalService extends BaseService {
   async stop(id) {
     const task = await this.taskInfoEntity.findOneBy({ id: Equal(id) });
     if (task) {
-      const job = this.cronJobs.get(task.jobId);
-      if (job) {
-        job.stop();
-        this.cronJobs.delete(task.jobId);
-      }
+      this.stopByJobId(task.jobId);
+      this.coolEventManager.emit('onLocalTaskStop', task.jobId);
       task.status = 0;
       await this.taskInfoEntity.update(task.id, task);
       await this.updateNextRunTime(task.jobId);
+    }
+  }
+
+  /**
+   * 停止任务
+   * @param jobId
+   */
+  async stopByJobId(jobId) {
+    const job = this.cronJobs.get(jobId);
+    if (job) {
+      job.stop();
+      this.cronJobs.delete(jobId);
     }
   }
 
@@ -151,7 +163,9 @@ export class TaskLocalService extends BaseService {
           const job = this.cronJobs.get(params.jobId);
           job.stop();
           this.cronJobs.delete(params.jobId);
+          this.coolEventManager.emit('onLocalTaskStop', params.jobId);
         }
+        await this.utils.sleep(1000);
         this.createCronJob(params);
       }
     });

@@ -54,7 +54,7 @@
   },
   "scripts": {
     "start": "NODE_ENV=production node ./bootstrap.js",
-    "dev": "rimraf src/index.ts && cool check entity && cross-env NODE_ENV=local mwtsc --cleanOutDir --watch --run @midwayjs/mock/app.js",
+    "dev": "rimraf src/index.ts && cross-env NODE_ENV=local mwtsc --cleanOutDir --watch --run @midwayjs/mock/app.js",
     "test": "cross-env NODE_ENV=unittest jest",
     "cov": "jest --coverage",
     "lint": "mwts check",
