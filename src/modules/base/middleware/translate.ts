@@ -38,7 +38,7 @@ export class BaseTranslateMiddleware
         this.logger.error(error);
         // 处理翻译消息
         if (error.name == 'CoolCommException') {
-          if (language && error.message && error.message !== 'success') {
+          if (error.message && error.message !== 'success') {
             ctx.status = error.statusCode || 200;
             ctx.body = {
               code: RESCODE.COMMFAIL,
@@ -51,6 +51,11 @@ export class BaseTranslateMiddleware
             return;
           }
         }
+        ctx.status = 500;
+        ctx.body = {
+          code: RESCODE.COMMFAIL,
+          message: 'Service Error',
+        };
         return;
       }
       if (!this.config.enable) {
