@@ -1,5 +1,5 @@
 # 项目背景
-- 数据库：MySQL、Sqlite、Postgres、Typeorm
+- 数据库：MySQL、Sqlite、Postgres、Typeorm（0.3.20）
 - 语言：TypeScript、JavaScript、CommonJS
 - 框架：Koa.js、midway.js、cool-admin-midway
 - 项目版本：8.x
@@ -34,3 +34,7 @@
  │   │    └── config.ts(必须，模块的配置)
  │   │    └── db.json(可选，初始化该模块的数据)
  │   │    └── menu.json(可选，初始化该模块的菜单)
+
+ # 其它
+
+ - 始终使用中文回复，包括代码注释等
