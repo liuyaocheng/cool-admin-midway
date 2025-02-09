@@ -137,6 +137,7 @@ export class AppDemoGoodsController extends BaseController {
 | ------------------ | -------- | ------------------------------------------------------------- | ---- |
 | prefix             | String   | 手动设置路由前缀                                              |      |
 | api                | Array    | 快速 API 接口可选`add` `delete` `update` `info` `list` `page` |      |
+| serviceApis        | Array    | 将 service 方法注册为 api，通过 post 请求，直接调用 service 方法 |      |
 | pageQueryOp        | QueryOp  | 分页查询设置                                                  |      |
 | listQueryOp        | QueryOp  | 列表查询设置                                                  |      |
 | insertParam        | Function | 请求插入参数，如新增的时候需要插入当前登录用户的 ID           |      |
@@ -152,6 +153,7 @@ export class AppDemoGoodsController extends BaseController {
 | where             | Function | 其他查询条件                                                                        |      |
 | select            | Array    | 选择查询字段                                                                        |      |
 | fieldEq           | Array    | 筛选字段，字符串数组或者对象数组{ column: string, requestParam: string }，如 type=1 |      |
+| fieldLike         | Array    | 模糊查询字段，字符串数组或者对象数组{ column: string, requestParam: string }，如 title |      |
 | addOrderBy        | Object   | 排序                                                                                |      |
 | join              | JoinOp[] | 关联表查询                                                                          |      |
 
@@ -214,6 +216,10 @@ import { DemoAppGoodsEntity } from "../../entity/goods";
     fieldEq: ["type"],
     // 多表关联，请求筛选字段与表字段不一致的情况
     fieldEq: [{ column: "a.id", requestParam: "id" }],
+     // 让title字段支持模糊查询，请求参数为title
+    fieldLike: ['a.title'],
+    // 让title字段支持模糊查询，请求筛选字段与表字段不一致的情况
+    fieldLike: [{ column: "a.title", requestParam: "title" }],
     // 指定返回字段，注意多表查询这个是必要的，否则会出现重复字段的问题
     select: ["a.*", "b.name", "a.name AS userName"],
     // 4.x置为过时 改用 join 关联表用户表

@@ -41,7 +41,8 @@
  - `@midwayjs/decorator`，已弃用，使用`@midwayjs/core`
  - 不要使用自定义sql来操作数据库，而是使用typeorm的api，统计相关的可以考虑使用原生sql
  - Controller中不允许重写`add`、`delete`、`update`、`info`、`list`、`page`方法
- - Controller的关联查询一般写在pageQueryOp中，必要时需要创建关联查询
+ - Controller不需要加@Provide()注解
+ - page接口关联表查询一般写在Controller的pageQueryOp中，尽量不要使用自定义sql
  - Entity字段使用驼峰命名，如：studentNo
  - Entity不允许使用@ManyToOne、@OneToMany等外键关系
  - Entity的BaseEntity引用固定为：`import { BaseEntity } from '../../base/entity/base';`，禁止修改层级
