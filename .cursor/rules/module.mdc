@@ -11,7 +11,7 @@ globs:
 ```ts
  ├── modules
  │   └── base(基础的权限管理系统)
- │   │    └── controller(api接口， 用法参考 [controller.mdc](mdc:.cursor/rules/controller.mdc) )
+ │   │    └── controller(api接口， 用法参考 [controller.mdc](mdc:.cursor/rules/controller.mdc) ，必要时需要创建关联查询， 配置pageQueryOp)
  │   │    │    └── admin(后台管理接口)
  │   │    │    └── app(应用接口，如小程序APP等)
  │   │    └── dto(可选，参数校验)
@@ -24,6 +24,23 @@ globs:
  │   │    └── menu.json(可选(7.x新增，配合模块市场使用)，初始化该模块的菜单，参考 [menu.json](mdc:src/modules/base/menu.json) )
 
 ```
+
+创建模块一般需要创建`controller`、`entity`、`service`，
+如果entity文件夹没有子文件夹，那么引用BaseEntity是
+
+ - 引用BaseEntity固定为
+
+ ```ts
+import { BaseEntity } from '../../modules/base/entity/base';
+ ```
+
+ 错误示例
+
+ ```ts
+import { BaseEntity } from '../../../modules/base/entity/base';
+ ```
+
+ 多了一个层级
 
 ## 模块配置
 

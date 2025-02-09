@@ -161,7 +161,7 @@ export class AppDemoGoodsController extends BaseController {
 
 | 参数      | 类型   | 说明                                                               |
 | --------- | ------ | ------------------------------------------------------------------ |
-| entity    | Class  | 实体类                                                             |
+| entity    | Class  | 实体类，注意不能写表名                                                  |
 | alias     | String | 别名，如果有关联表默认主表的别名为`a`, 其他表一般按 b、c、d...设置 |
 | condition | String | 关联条件                                                           |
 | type      | String | 内关联： 'innerJoin', 左关联：'leftJoin'                           |
