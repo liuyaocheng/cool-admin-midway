@@ -1,6 +1,5 @@
 import { CoolConfig } from '@cool-midway/core';
 import { MidwayConfig } from '@midwayjs/core';
-import { pSqlitePath } from '../comm/path';
 import { TenantSubscriber } from '../modules/base/db/tenant';
 
 /**
