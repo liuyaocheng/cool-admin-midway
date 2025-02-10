@@ -53,6 +53,17 @@ export class TenantSubscriber implements EntitySubscriberInterface<any> {
     urls: string[];
   };
 
+  // 系统接口不过滤
+  ignoreUrls = [
+    '/admin/base/open/login',
+    '/admin/base/comm/person',
+    '/admin/base/comm/permmenu',
+    '/admin/dict/info/data',
+  ];
+
+  // 不进行租户过滤的用户
+  ignoreUsername = ['admin'];
+
   @Inject()
   utils: Utils;
 
@@ -96,7 +107,14 @@ export class TenantSubscriber implements EntitySubscriberInterface<any> {
     ctx = this.getCtx();
     if (!ctx || !this.checkHandler()) return undefined;
     url = ctx?.url;
-
+    // 忽略用户
+    if (this.ignoreUsername.includes(ctx?.admin?.username)) {
+      return undefined;
+    }
+    // 忽略系统接口
+    if (this.ignoreUrls.some(pattern => this.utils.matchUrl(pattern, url))) {
+      return undefined;
+    }
     if (_.startsWith(url, '/admin/')) {
       tenantId = ctx?.admin?.tenantId;
     } else if (_.startsWith(url, '/app/')) {
@@ -130,7 +148,7 @@ export class TenantSubscriber implements EntitySubscriberInterface<any> {
     if (!this.tenant.enable) return;
     const tenantId = await this.getTenantId();
     if (tenantId) {
-      queryBuilder.values({ tenantId });
+      queryBuilder.setParameter('tenantId', tenantId);
     }
   }
 

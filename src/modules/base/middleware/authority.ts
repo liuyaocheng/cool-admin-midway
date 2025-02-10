@@ -55,7 +55,6 @@ export class BaseAuthorityMiddleware
       if (_.startsWith(url, adminUrl)) {
         try {
           ctx.admin = jwt.verify(token, this.jwtConfig.jwt.secret);
-          ctx.admin.tenantId = 1;
           if (ctx.admin.isRefresh) {
             ctx.status = 401;
             throw new CoolCommException('登录失效~', ctx.status);
