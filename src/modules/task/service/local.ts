@@ -165,14 +165,16 @@ export class TaskLocalService extends BaseService {
           this.cronJobs.delete(params.jobId);
           this.coolEventManager.emit('onLocalTaskStop', params.jobId);
         }
-        await this.utils.sleep(1000);
-        this.createCronJob(params);
+        setTimeout(async () => {
+          this.createCronJob(params);
+        }, 1000);
       }
     });
 
     if (params.status === 1) {
-      await this.utils.sleep(1000);
-      await this.updateNextRunTime(params.jobId);
+      setTimeout(async () => {
+        await this.updateNextRunTime(params.jobId);
+      }, 1000);
     }
   }
 

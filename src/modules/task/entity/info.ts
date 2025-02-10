@@ -54,9 +54,9 @@ export class TaskInfoEntity extends BaseEntity {
   @Column({ comment: '状态 0-cron 1-时间间隔', default: 0 })
   taskType: number;
 
-  @Column({ type: 'datetime', nullable: true })
+  @Column({ nullable: true })
   lastExecuteTime: Date;
 
-  @Column({ type: 'datetime', nullable: true })
+  @Column({ nullable: true })
   lockExpireTime: Date;
 }
