@@ -226,6 +226,9 @@ export class BaseTranslateService {
           await Promise.all(tasks);
         } finally {
           clearInterval(interval);
+          // 加载翻译文件到内存
+          await this.loadTranslations();
+          await this.loadDictTranslations();
           process.stdout.write('\r✅ i18n translate success！！！\n');
         }
       } else {
