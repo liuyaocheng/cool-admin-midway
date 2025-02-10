@@ -55,13 +55,15 @@ export class BaseTranslateService {
 
   msgMap: Record<string, string> = {};
 
+  commMap: Record<string, string> = {};
+
   // 添加字典映射
   dictMap: Record<string, string> = {};
 
   /**
    * 检查是否存在锁文件
    */
-  private checkLockFile(type: 'menu' | 'msg'): boolean {
+  private checkLockFile(type: 'menu' | 'msg' | 'comm'): boolean {
     const lockFile = path.join(this.basePath, type, '.lock');
     return fs.existsSync(lockFile);
   }
@@ -69,7 +71,7 @@ export class BaseTranslateService {
   /**
    * 创建锁文件
    */
-  private createLockFile(type: 'menu' | 'msg'): void {
+  private createLockFile(type: 'menu' | 'msg' | 'comm'): void {
     const lockFile = path.join(this.basePath, type, '.lock');
     fs.writeFileSync(lockFile, new Date().toISOString());
   }
@@ -89,12 +91,15 @@ export class BaseTranslateService {
     this.menuMap = {};
     this.msgMap = {};
     this.dictMap = {};
-
+    this.commMap = {};
     // 加载菜单翻译
     await this.loadTypeTranslations('menu', this.menuMap);
 
     // 加载消息翻译
     await this.loadTypeTranslations('msg', this.msgMap);
+
+    // 加载通用消息翻译
+    await this.loadTypeTranslations('comm', this.commMap);
 
     // 加载字典翻译
     await this.loadDictTranslations();
@@ -106,7 +111,7 @@ export class BaseTranslateService {
    * @param map 映射对象
    */
   private async loadTypeTranslations(
-    type: 'menu' | 'msg',
+    type: 'menu' | 'msg' | 'comm',
     map: Record<string, string>
   ) {
     const dirPath = path.join(this.basePath, type);
@@ -178,7 +183,7 @@ export class BaseTranslateService {
    * @returns 翻译后的文本
    */
   translate(
-    type: 'menu' | 'msg' | 'dict:info' | 'dict:type',
+    type: 'menu' | 'msg' | 'dict:info' | 'dict:type' | 'comm',
     language: string,
     text: string
   ): string {
@@ -202,9 +207,10 @@ export class BaseTranslateService {
       this.basePath = path.join(this.app.getBaseDir(), '..', 'src', 'locales');
       const menuLockExists = this.checkLockFile('menu');
       const msgLockExists = this.checkLockFile('msg');
+      const commLockExists = this.checkLockFile('comm');
       const dictLockExists = this.checkDictLockFile();
 
-      if (!menuLockExists || !msgLockExists || !dictLockExists) {
+      if (!menuLockExists || !msgLockExists || !dictLockExists || !commLockExists) {
         const tasks = [];
         if (!msgLockExists) {
           tasks.push(this.genBaseMsg());
@@ -214,6 +220,9 @@ export class BaseTranslateService {
         }
         if (!dictLockExists) {
           tasks.push(this.genBaseDict());
+        }
+        if (!commLockExists) {
+          tasks.push(this.genCommMsg());
         }
         // 启动旋转动画
         const spinner = ['|', '/', '-', '\\'];
@@ -464,6 +473,87 @@ export class BaseTranslateService {
     this.createLockFile('msg');
   }
 
+
+  /**
+   * 生成通用消息
+   */
+  async genCommMsg(){
+    const file = path.join(this.basePath, 'comm', 'zh-cn.json');
+    const scanPath = path.join(this.app.getBaseDir(), '..', 'src', 'modules');
+    const messages = {};
+
+     // 递归扫描目录
+     const scanDir = (dir: string) => {
+      const files = fs.readdirSync(dir);
+      for (const file of files) {
+        const fullPath = path.join(dir, file);
+        const stat = fs.statSync(fullPath);
+
+        if (stat.isDirectory()) {
+          scanDir(fullPath);
+        } else if (file.endsWith('.ts')) {
+          const content = fs.readFileSync(fullPath, 'utf-8');
+          const matches = content.match(
+            /this.translate.comm\((['"])(.*?)\1\)/g
+          );
+          if (matches) {
+            matches.forEach(match => {
+              const message = match.match(/(['"])(.*?)\1/)[2];
+              messages[message] = message;
+            });
+          }
+        }
+      }
+    };
+
+    // 开始扫描
+    scanDir(scanPath);
+
+    // 确保目录存在
+    const msgDir = path.dirname(file);
+    if (!fs.existsSync(msgDir)) {
+      fs.mkdirSync(msgDir, { recursive: true });
+    }
+
+    // 写入文件
+    const text = JSON.stringify(messages, null, 2);
+    fs.writeFileSync(file, text);
+    this.logger.debug('base comm generate success');
+
+    const translatePromises = [];
+    for (const language of this.config.languages) {
+      if (language !== 'zh-cn') {
+        translatePromises.push(
+          this.invokeTranslate(
+            text,
+            language,
+            path.join(this.basePath, 'comm'),
+            'comm'
+          )
+        );
+      }
+    }
+    await Promise.all(translatePromises);
+    this.createLockFile('comm');
+  }
+  
+  /**
+   * 通用消息翻译
+   * @param text 文本
+   * @returns 翻译后的文本对象,包含各语言的翻译
+   */
+  comm(text: string) {
+    const translations = {};
+    for (const lang of this.config.languages) {
+      const langFile = path.join(this.basePath, 'comm', `${lang}.json`);
+      if (fs.existsSync(langFile)) {
+        const content = JSON.parse(fs.readFileSync(langFile, 'utf-8'));
+        translations[lang] = content[text] || text;
+      }
+    }
+    return translations;
+  }
+
   /**
    * 调用翻译
    * @param text 文本
@@ -476,7 +566,7 @@ export class BaseTranslateService {
     text: string,
     language: string,
     dirPath: string,
-    type: 'menu' | 'msg' | 'dict' = 'msg'
+    type: 'menu' | 'msg' | 'dict' | 'comm' = 'msg'
   ) {
     this.logger.debug(`${type} ${language} translate start`);
     const response = await axios.post(I18N.DEFAULT_SERVICE_URL, {
