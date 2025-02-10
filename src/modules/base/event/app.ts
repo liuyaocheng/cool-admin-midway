@@ -35,6 +35,7 @@ export class BaseAppEvent {
         break;
     }
 
+    console.log('url=>', url);
     exec(command, (error: any) => {
       if (!error) {
         this.logger.info(`Application has opened in browser at ${url}`);
