@@ -210,7 +210,12 @@ export class BaseTranslateService {
       const commLockExists = this.checkLockFile('comm');
       const dictLockExists = this.checkDictLockFile();
 
-      if (!menuLockExists || !msgLockExists || !dictLockExists || !commLockExists) {
+      if (
+        !menuLockExists ||
+        !msgLockExists ||
+        !dictLockExists ||
+        !commLockExists
+      ) {
         const tasks = [];
         if (!msgLockExists) {
           tasks.push(this.genBaseMsg());
@@ -473,17 +478,16 @@ export class BaseTranslateService {
     this.createLockFile('msg');
   }
 
-
   /**
    * 生成通用消息
    */
-  async genCommMsg(){
+  async genCommMsg() {
     const file = path.join(this.basePath, 'comm', 'zh-cn.json');
     const scanPath = path.join(this.app.getBaseDir(), '..', 'src', 'modules');
     const messages = {};
 
-     // 递归扫描目录
-     const scanDir = (dir: string) => {
+    // 递归扫描目录
+    const scanDir = (dir: string) => {
       const files = fs.readdirSync(dir);
       for (const file of files) {
         const fullPath = path.join(dir, file);
@@ -536,7 +540,7 @@ export class BaseTranslateService {
     await Promise.all(translatePromises);
     this.createLockFile('comm');
   }
-  
+
   /**
    * 通用消息翻译
    * @param text 文本

@@ -34,7 +34,8 @@ export class Utils {
     const req = ctx.req;
     return (
       req.headers['x-forwarded-for'] ||
-      req.socket.remoteAddress.replace('::ffff:', '')
+      req.socket.remoteAddress?.replace('::ffff:', '') ||
+      ''
     );
   }
 

@@ -15,7 +15,7 @@ export class DemoI18nService {
   async en() {
     const value = this.translate.comm('一个很Cool的框架')['en'];
     console.log(value);
-    return value
+    return value;
   }
 
   /**
@@ -24,6 +24,6 @@ export class DemoI18nService {
   async tw() {
     const value = this.translate.comm('一个很Cool的框架')['zh-tw'];
     console.log(value);
-    return value
+    return value;
   }
 }
