@@ -1,4 +1,9 @@
-import { CoolController, BaseController, CoolTag, TagTypes } from '@cool-midway/core';
+import {
+  CoolController,
+  BaseController,
+  CoolTag,
+  TagTypes,
+} from '@cool-midway/core';
 import { Body, Get, Inject, Post } from '@midwayjs/core';
 import { BaseCodingService } from '../../service/coding';
 
@@ -16,10 +21,14 @@ export class AdminCodingController extends BaseController {
   }
 
   @Post('/createCode', { summary: '创建代码' })
-  async createCode(@Body() codes: {
-    path: string;
-    content: string;
-  }[]) {
-    return this.baseCodingService.createCode(codes);
+  async createCode(
+    @Body('codes')
+    codes: {
+      path: string;
+      content: string;
+    }[]
+  ) {
+    this.baseCodingService.createCode(codes);
+    return this.ok();
   }
 }

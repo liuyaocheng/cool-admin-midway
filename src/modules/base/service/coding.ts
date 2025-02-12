@@ -28,14 +28,14 @@ export class BaseCodingService extends BaseService {
     // 递归扫描目录函数
     const scanDir = (dir: string) => {
       const files = fs.readdirSync(dir);
-      
+
       for (const file of files) {
         // 跳过 .DS_Store 文件
         if (file === '.DS_Store') continue;
 
         const fullPath = path.join(dir, file);
         const stat = fs.statSync(fullPath);
-        
+
         if (stat.isDirectory()) {
           scanDir(fullPath);
         } else {
@@ -62,23 +62,25 @@ export class BaseCodingService extends BaseService {
    * 创建代码
    * @param codes 代码
    */
-  async createCode(codes: {
-    path: string;
-    content: string;
-  }[]) {
+  async createCode(
+    codes: {
+      path: string;
+      content: string;
+    }[]
+  ) {
     if (this.app.getEnv() !== 'local') {
       throw new Error('只能在开发环境下创建代码');
     }
 
-    const moduleDir = await this.app.getBaseDir();
+    const moduleDir = this.app.getAppDir();
 
     for (const code of codes) {
       // 格式化代码内容
       const formattedContent = await this.formatContent(code.content);
-      
+
       // 获取完整的文件路径
       const filePath = path.join(moduleDir, code.path);
-      
+
       // 确保目录存在
       const dirPath = path.dirname(filePath);
       if (!fs.existsSync(dirPath)) {
