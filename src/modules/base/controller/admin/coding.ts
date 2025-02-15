@@ -1,9 +1,4 @@
-import {
-  CoolController,
-  BaseController,
-  CoolTag,
-  TagTypes,
-} from '@cool-midway/core';
+import { CoolController, BaseController } from '@cool-midway/core';
 import { Body, Get, Inject, Post } from '@midwayjs/core';
 import { BaseCodingService } from '../../service/coding';
 

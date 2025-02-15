@@ -1,7 +1,5 @@
 import { App, IMidwayApplication, Init, Inject, Provide } from '@midwayjs/core';
 import { BaseService } from '@cool-midway/core';
-import { InjectEntityModel } from '@midwayjs/typeorm';
-import { Repository } from 'typeorm';
 import * as fs from 'fs';
 import * as path from 'path';
 
