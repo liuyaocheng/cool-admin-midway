@@ -21,39 +21,9 @@ export class BaseCodingService extends BaseService {
 
     const moduleDir = await this.app.getBaseDir();
     const modulesPath = path.join(moduleDir, 'modules');
-    const result = [];
-
-    // 递归扫描目录函数
-    const scanDir = (dir: string) => {
-      const files = fs.readdirSync(dir);
-
-      for (const file of files) {
-        // 跳过 .DS_Store 文件
-        if (file === '.DS_Store') continue;
-
-        const fullPath = path.join(dir, file);
-        const stat = fs.statSync(fullPath);
-
-        if (stat.isDirectory()) {
-          scanDir(fullPath);
-        } else {
-          // 获取相对于项目根目录的路径
-          let relativePath = path.relative(moduleDir, fullPath);
-          // 只返回模块下的文件
-          if (relativePath.startsWith('modules/')) {
-            // 将 .js 后缀改为 .ts
-            if (relativePath.endsWith('.js')) {
-              relativePath = relativePath.replace(/\.js$/, '.ts');
-            }
-            result.push(`src/${relativePath}`);
-          }
-        }
-      }
-    };
-
-    // 开始扫描
-    scanDir(modulesPath);
-    return result;
+    // 返回modules下有多少个模块
+    const modules = fs.readdirSync(modulesPath);
+    return modules.filter(module => module !== '.DS_Store');
   }
 
   /**
