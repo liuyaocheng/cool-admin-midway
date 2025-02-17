@@ -12,7 +12,7 @@ export class AdminCodingController extends BaseController {
 
   @Get('/getModuleTree', { summary: '获取模块目录结构' })
   async getModuleTree() {
-    return this.baseCodingService.getModuleTree();
+    return this.ok(await this.baseCodingService.getModuleTree());
   }
 
   @Post('/createCode', { summary: '创建代码' })
