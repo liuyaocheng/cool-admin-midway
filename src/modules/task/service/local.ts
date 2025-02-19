@@ -165,16 +165,12 @@ export class TaskLocalService extends BaseService {
           this.cronJobs.delete(params.jobId);
           this.coolEventManager.emit('onLocalTaskStop', params.jobId);
         }
-        setTimeout(async () => {
-          this.createCronJob(params);
-        }, 1000);
+        this.createCronJob(params);
       }
     });
 
     if (params.status === 1) {
-      setTimeout(async () => {
-        await this.updateNextRunTime(params.jobId);
-      }, 1000);
+      await this.updateNextRunTime(params.jobId);
     }
   }
 
@@ -315,8 +311,8 @@ export class TaskLocalService extends BaseService {
       return;
     }
     try {
-      const currentTime = moment();
-      const lockExpireTime = moment().add(5, 'minutes');
+      const currentTime = moment().toDate();
+      const lockExpireTime = moment().add(5, 'minutes').toDate();
       const result = await this.taskInfoEntity
         .createQueryBuilder()
         .update()

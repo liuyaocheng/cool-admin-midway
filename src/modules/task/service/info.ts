@@ -64,8 +64,8 @@ export class TaskInfoService extends BaseService {
    */
   async stop(id) {
     this.type === 'bull'
-      ? this.taskBullService.stop(id)
-      : this.taskLocalService.stop(id);
+      ? await this.taskBullService.stop(id)
+      : await this.taskLocalService.stop(id);
   }
 
   /**
@@ -75,8 +75,8 @@ export class TaskInfoService extends BaseService {
    */
   async start(id, type?) {
     this.type === 'bull'
-      ? this.taskBullService.start(id)
-      : this.taskLocalService.start(id, type);
+      ? await this.taskBullService.start(id)
+      : await this.taskLocalService.start(id, type);
   }
   /**
    * 手动执行一次

@@ -17,8 +17,8 @@ import * as _ from 'lodash';
 import { Utils } from '../../../comm/utils';
 import { TaskInfoQueue } from '../queue/task';
 import { IMidwayApplication } from '@midwayjs/core';
-import { v4 as uuidv4 } from 'uuid';
 import * as moment from 'moment';
+
 /**
  * 任务
  */
@@ -55,7 +55,7 @@ export class TaskBullService extends BaseService {
     if (task) {
       const result = await this.taskInfoQueue.getJobSchedulers();
       const job = _.find(result, e => {
-        return e.template?.data?.jobId === task.jobId;
+        return e.key == task.jobId;
       });
       if (job) {
         await this.taskInfoQueue.removeJobScheduler(job.key);
@@ -72,7 +72,7 @@ export class TaskBullService extends BaseService {
   async remove(taskId) {
     const info = await this.taskInfoEntity.findOneBy({ id: Equal(taskId) });
     const result = await this.taskInfoQueue.getJobSchedulers();
-    const job = _.find(result, { id: info?.jobId });
+    const job = _.find(result, { key: info?.jobId });
     if (job) {
       await this.taskInfoQueue.removeJobScheduler(job.key);
     }
@@ -116,11 +116,14 @@ export class TaskBullService extends BaseService {
    */
   async exist(jobId) {
     const info = await this.taskInfoEntity.findOneBy({ jobId: Equal(jobId) });
+    if (!info) {
+      return false;
+    }
     const result = await this.taskInfoQueue.getJobSchedulers();
-    const ids = result.map(e => {
-      return e.id;
+    const job = _.find(result, e => {
+      return e.key == info.jobId;
     });
-    return ids.includes(info?.jobId);
+    return !!job;
   }
   /**
    * 新增或修改
@@ -128,10 +131,7 @@ export class TaskBullService extends BaseService {
    */
   async addOrUpdate(params) {
     delete params.repeatCount;
-    let repeatConf;
-    if (!params.jobId) {
-      params.jobId = uuidv4();
-    }
+    let repeatConf, jobId;
     await this.getOrmManager().transaction(async transactionalEntityManager => {
       if (params.taskType === 0) {
         params.limit = null;
@@ -161,21 +161,19 @@ export class TaskBullService extends BaseService {
           removeOnFail: true,
           repeat,
         });
-        if (!result) {
+        if (!result?.repeatJobKey) {
           throw new Error('任务添加失败，请检查任务配置');
         }
-        // await transactionalEntityManager.update(TaskInfoEntity, params.id, {
-        //   jobId: params.id,
-        //   type: params.type,
-        // });
+        jobId = result.repeatJobKey;
         repeatConf = result.opts;
       }
     });
     if (params.status === 1) {
-      this.utils.sleep(1000);
       await this.updateNextRunTime(params.jobId);
       await this.taskInfoEntity.update(params.id, {
         repeatConf: JSON.stringify(repeatConf.repeat),
+        status: 1,
+        jobId,
       });
     }
   }
@@ -209,8 +207,11 @@ export class TaskBullService extends BaseService {
    */
   async record(task, status, detail?) {
     const info = await this.taskInfoEntity.findOneBy({
-      jobId: Equal(task.jobId),
+      id: Equal(task.id),
     });
+    if (!info) {
+      return;
+    }
     await this.taskLogEntity.save({
       taskId: info.id,
       status,
@@ -249,7 +250,7 @@ export class TaskBullService extends BaseService {
     let nextRunTime;
     const result = await this.taskInfoQueue.getJobSchedulers();
     const task = _.find(result, e => {
-      return e.template?.data?.jobId === jobId;
+      return e.key === jobId;
     });
     if (task) {
       nextRunTime = new Date(task.next);
@@ -261,10 +262,14 @@ export class TaskBullService extends BaseService {
    * @param jobId
    */
   async updateNextRunTime(jobId) {
+    const nextRunTime = await this.getNextRunTime(jobId);
+    if (!nextRunTime) {
+      return;
+    }
     await this.taskInfoEntity.update(
       { jobId },
       {
-        nextRunTime: await this.getNextRunTime(jobId),
+        nextRunTime,
       }
     );
   }
@@ -283,22 +288,19 @@ export class TaskBullService extends BaseService {
   /**
    * 刷新任务状态
    */
-  async updateStatus(jobId) {
+  async updateStatus(jobId: number) {
+    const task = await this.taskInfoEntity.findOneBy({ id: jobId });
+    if (!task) {
+      return;
+    }
     const result = await this.taskInfoQueue.getJobSchedulers();
-    const job = _.find(result, { id: jobId + '' });
+    const job = _.find(result, { key: task.jobId });
     if (!job) {
       return;
     }
-    const task = await this.taskInfoEntity.findOneBy({ id: job.id });
     const nextTime = await this.getNextRunTime(task.jobId);
     if (task) {
-      // if (task.nextRunTime.getTime() == nextTime.getTime()) {
-      //   task.status = 0;
-      //   task.nextRunTime = nextTime;
-      //   this.taskInfoQueue.removeRepeatableByKey(job.key);
-      // } else {
       task.nextRunTime = nextTime;
-      // }
       await this.taskInfoEntity.update(task.id, task);
     }
   }
