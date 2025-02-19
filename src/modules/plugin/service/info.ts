@@ -217,7 +217,7 @@ export class PluginService extends BaseService {
     } catch (e) {
       return {
         type: 0,
-        message: `插件信息不完整，请检查${data.errorData}`,
+        message: `插件信息不完整，请检查${data?.errorData || ''}`,
       };
     }
     const check = await this.pluginInfoEntity.findOne({
