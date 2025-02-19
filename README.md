@@ -2,7 +2,7 @@
   <a href="https://midwayjs.org/" target="blank"><img src="https://cool-show.oss-cn-shanghai.aliyuncs.com/admin/logo.png" width="200" alt="Midway Logo" /></a>
 </p>
 
-<p align="center">cool-admin(midway版)一个很酷的后台权限管理系统，开源免费，模块化、插件化、极速开发CRUD，方便快速构建迭代后台管理系统，支持serverless、docker、普通服务器等多种方式部署
+<p align="center">cool-admin(nodejs版)一个很酷的后台权限管理系统，开源免费，Ai编码、流程编排、模块化、插件化、极速开发CRUD，方便快速构建迭代后台管理系统，支持原生、docker、普通服务器等多种方式部署
 到 <a href="https://cool-js.com" target="_blank">官网</a> 进一步了解。
 <p align="center">
     <a href="https://github.com/cool-team-official/cool-admin-midway/blob/master/LICENSE" target="_blank"><img src="https://img.shields.io/badge/license-MIT-green?style=flat-square" alt="GitHub license" />
@@ -27,7 +27,7 @@ Ai 时代，很多老旧的框架已经无法满足现代化的开发需求，Co
 
 ## 技术栈
 
-- 后端：**`node.js` `midway.js` `koa.js` `typescript`**
+- 后端：**`node.js` `typescript`**
 - 前端：**`vue.js` `element-plus` `jsx` `pinia` `vue-router`**
 - 数据库：**`mysql` `postgresql` `sqlite`**
 
@@ -79,7 +79,7 @@ Ai 时代，很多老旧的框架已经无法满足现代化的开发需求，Co
 
 以 Mysql 为例，其他数据库请参考[数据库配置文档](https://cool-js.com/admin/node/quick.html#%E6%95%B0%E6%8D%AE%E5%BA%93%E9%85%8D%E7%BD%AE)
 
-Mysql(`>=5.7版本`)，建议 8.0，node 版本(`>=16.x`)，建议 18.x，首次启动会自动初始化并导入数据
+Mysql(`>=5.7版本`)，建议 8.0，node 版本(`>=18.x`)，首次启动会自动初始化并导入数据
 
 ```ts
 // mysql，驱动已经内置，无需安装
@@ -112,10 +112,11 @@ typeorm: {
 ```bash
 $ npm i
 $ npm run dev
-$ open http://localhost:8001/
 ```
 
-注： `npm i`如果安装失败可以尝试使用[cnpm](https://developer.aliyun.com/mirror/NPM?from=tnpm)，或者切换您的镜像源，推荐使用[pnpm](https://pnpm.io/)
+启动完成访问：[http://localhost:8001/](http://localhost:8001)
+
+注： `npm i`如果安装失败可以尝试使用切换您的镜像源，推荐使用[pnpm](https://pnpm.io/)安装
 
 ## CURD(快速增删改查)
 
@@ -182,7 +183,7 @@ export class DemoAppGoodsController extends BaseController {
 
 ### 部署
 
-[部署教程](https://cool-js.com/admin/deploy.html)
+[部署教程](https://node.cool-admin.com/src/guide/deploy.html)
 
 ### 内置指令
 
