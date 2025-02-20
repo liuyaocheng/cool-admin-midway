@@ -17,7 +17,7 @@ export class DictTypeService extends BaseService {
    * @param ids
    */
   async delete(ids) {
-    super.delete(ids);
+    await super.delete(ids);
     await this.dictInfoEntity.delete({
       typeId: In(ids),
     });
