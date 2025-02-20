@@ -34,7 +34,7 @@ function isPortAvailableSync(port: number): boolean {
  */
 export function availablePort(startPort: number): number {
   let port = startPort;
-  while (port <= 65535) {
+  while (port <= 8010) {
     if (isPortAvailableSync(port)) {
       if (port !== startPort) {
         console.warn(
