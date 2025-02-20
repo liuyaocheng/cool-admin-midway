@@ -48,7 +48,7 @@ Ai 时代，很多老旧的框架已经无法满足现代化的开发需求，Co
 
 ## 演示
 
-[AI 极速编码](https://cool-js.com/ai/introduce.html)
+[AI 极速编码](https://node.cool-admin.com/src/guide/ai.html)
 
 [https://show.cool-admin.com](https://show.cool-admin.com)
 
