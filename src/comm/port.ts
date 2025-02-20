@@ -46,5 +46,5 @@ export function availablePort(startPort: number): number {
     }
     port++;
   }
-  throw new Error('No available port found');
+  return 8001;
 }
