@@ -33,6 +33,7 @@ function isPortAvailableSync(port: number): boolean {
  * @returns {number} - 可用的端口
  */
 export function availablePort(startPort: number): number {
+  if (!process['pkg']) return startPort;
   let port = startPort;
   while (port <= 8010) {
     if (isPortAvailableSync(port)) {
