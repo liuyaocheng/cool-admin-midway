@@ -102,7 +102,7 @@ export class TenantSubscriber implements EntitySubscriberInterface<any> {
     if (!ctx) return false;
     const url = ctx?.url;
     if (!url) return false;
-    if (this.tenant.enable) {
+    if (this.tenant?.enable) {
       const isNeedTenant = this.tenant.urls.some(pattern =>
         this.utils.matchUrl(pattern, url)
       );
@@ -160,7 +160,7 @@ export class TenantSubscriber implements EntitySubscriberInterface<any> {
    * @param queryBuilder
    */
   afterSelectQueryBuilder(queryBuilder: SelectQueryBuilder<any>) {
-    if (!this.tenant.enable) return;
+    if (!this.tenant?.enable) return;
     const tenantId = this.getTenantId();
     if (tenantId) {
       queryBuilder.where(
@@ -176,7 +176,7 @@ export class TenantSubscriber implements EntitySubscriberInterface<any> {
    * @param queryBuilder
    */
   async afterInsertQueryBuilder(queryBuilder: InsertQueryBuilder<any>) {
-    if (!this.tenant.enable) return;
+    if (!this.tenant?.enable) return;
     const tenantId = await this.getTenantId();
     if (tenantId) {
       queryBuilder.setParameter('tenantId', tenantId);
@@ -188,7 +188,7 @@ export class TenantSubscriber implements EntitySubscriberInterface<any> {
    * @param queryBuilder
    */
   async afterUpdateQueryBuilder(queryBuilder: UpdateQueryBuilder<any>) {
-    if (!this.tenant.enable) return;
+    if (!this.tenant?.enable) return;
     const tenantId = await this.getTenantId();
     if (tenantId) {
       queryBuilder.set({ tenantId });
@@ -201,7 +201,7 @@ export class TenantSubscriber implements EntitySubscriberInterface<any> {
    * @param queryBuilder
    */
   async afterDeleteQueryBuilder(queryBuilder: DeleteQueryBuilder<any>) {
-    if (!this.tenant.enable) return;
+    if (!this.tenant?.enable) return;
     const tenantId = await this.getTenantId();
     if (tenantId) {
       queryBuilder.where(`tenantId = ${tenantId}`);
