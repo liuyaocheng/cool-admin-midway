@@ -15,9 +15,11 @@ import {
   Config,
   IMidwayApplication,
   IMidwayContext,
+  Init,
   Inject,
 } from '@midwayjs/core';
 import { Utils } from '../../../comm/utils';
+import { CoolUrlTagData, TagTypes } from '@cool-midway/core';
 
 /**
  * 不操作租户
@@ -45,6 +47,9 @@ export class TenantSubscriber implements EntitySubscriberInterface<any> {
   @Inject()
   ctx: IMidwayContext;
 
+  @Inject()
+  coolUrlTagData: CoolUrlTagData;
+
   @Config('cool.tenant')
   tenant: {
     // 是否开启多租户
@@ -66,6 +71,28 @@ export class TenantSubscriber implements EntitySubscriberInterface<any> {
 
   @Inject()
   utils: Utils;
+
+  /**
+   * 获取所有忽略的url
+   */
+  getAllIgnoreUrls() {
+    const adminIgnoreUrls = this.coolUrlTagData.byKey(
+      TagTypes.IGNORE_TOKEN,
+      'admin'
+    );
+    const appIgnoreUrls = this.coolUrlTagData.byKey(
+      TagTypes.IGNORE_TOKEN,
+      'app'
+    );
+    this.ignoreUrls = [
+      ...this.ignoreUrls,
+      ...adminIgnoreUrls,
+      ...appIgnoreUrls,
+    ];
+    // 去重
+    this.ignoreUrls = _.uniq(this.ignoreUrls);
+    return this.ignoreUrls;
+  }
 
   /**
    * 检查是否需要租户
@@ -112,7 +139,9 @@ export class TenantSubscriber implements EntitySubscriberInterface<any> {
       return undefined;
     }
     // 忽略系统接口
-    if (this.ignoreUrls.some(pattern => this.utils.matchUrl(pattern, url))) {
+    if (
+      this.getAllIgnoreUrls().some(pattern => this.utils.matchUrl(pattern, url))
+    ) {
       return undefined;
     }
     if (_.startsWith(url, '/admin/')) {
@@ -134,9 +163,11 @@ export class TenantSubscriber implements EntitySubscriberInterface<any> {
     if (!this.tenant.enable) return;
     const tenantId = this.getTenantId();
     if (tenantId) {
-      queryBuilder.where(`${queryBuilder.alias}.tenantId = :tenantId`, {
-        tenantId,
-      });
+      queryBuilder.where(
+        `${
+          queryBuilder.alias ? queryBuilder.alias + '.' : ''
+        }tenantId = ${tenantId}`
+      );
     }
   }
 
@@ -161,7 +192,7 @@ export class TenantSubscriber implements EntitySubscriberInterface<any> {
     const tenantId = await this.getTenantId();
     if (tenantId) {
       queryBuilder.set({ tenantId });
-      queryBuilder.where('tenantId = :tenantId', { tenantId });
+      queryBuilder.where(`tenantId = ${tenantId}`);
     }
   }
 
@@ -173,7 +204,7 @@ export class TenantSubscriber implements EntitySubscriberInterface<any> {
     if (!this.tenant.enable) return;
     const tenantId = await this.getTenantId();
     if (tenantId) {
-      queryBuilder.where('tenantId = :tenantId', { tenantId });
+      queryBuilder.where(`tenantId = ${tenantId}`);
     }
   }
 }
