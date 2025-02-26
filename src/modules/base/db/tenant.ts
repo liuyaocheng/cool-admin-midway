@@ -15,7 +15,6 @@ import {
   Config,
   IMidwayApplication,
   IMidwayContext,
-  Init,
   Inject,
 } from '@midwayjs/core';
 import { Utils } from '../../../comm/utils';
@@ -67,7 +66,7 @@ export class TenantSubscriber implements EntitySubscriberInterface<any> {
   ];
 
   // 不进行租户过滤的用户
-  ignoreUsername = ['admin'];
+  ignoreUsername = [];
 
   @Inject()
   utils: Utils;
@@ -163,7 +162,7 @@ export class TenantSubscriber implements EntitySubscriberInterface<any> {
     if (!this.tenant?.enable) return;
     const tenantId = this.getTenantId();
     if (tenantId) {
-      queryBuilder.where(
+      queryBuilder.andWhere(
         `${
           queryBuilder.alias ? queryBuilder.alias + '.' : ''
         }tenantId = ${tenantId}`
@@ -175,11 +174,16 @@ export class TenantSubscriber implements EntitySubscriberInterface<any> {
    * 插入时添加租户ID
    * @param queryBuilder
    */
-  async afterInsertQueryBuilder(queryBuilder: InsertQueryBuilder<any>) {
+  afterInsertQueryBuilder(queryBuilder: InsertQueryBuilder<any>) {
     if (!this.tenant?.enable) return;
-    const tenantId = await this.getTenantId();
+    const tenantId = this.getTenantId();
     if (tenantId) {
-      queryBuilder.setParameter('tenantId', tenantId);
+      const values = queryBuilder.expressionMap.valuesSet;
+      if (Array.isArray(values)) {
+        queryBuilder.values(values.map(item => ({ ...item, tenantId })));
+      } else if (typeof values === 'object') {
+        queryBuilder.values({ ...values, tenantId });
+      }
     }
   }
 
@@ -187,12 +191,12 @@ export class TenantSubscriber implements EntitySubscriberInterface<any> {
    * 更新时添加租户ID和条件
    * @param queryBuilder
    */
-  async afterUpdateQueryBuilder(queryBuilder: UpdateQueryBuilder<any>) {
+  afterUpdateQueryBuilder(queryBuilder: UpdateQueryBuilder<any>) {
     if (!this.tenant?.enable) return;
-    const tenantId = await this.getTenantId();
+    const tenantId = this.getTenantId();
     if (tenantId) {
       queryBuilder.set({ tenantId });
-      queryBuilder.where(`tenantId = ${tenantId}`);
+      queryBuilder.andWhere(`tenantId = ${tenantId}`);
     }
   }
 
@@ -200,11 +204,11 @@ export class TenantSubscriber implements EntitySubscriberInterface<any> {
    * 删除时添加租户ID和条件
    * @param queryBuilder
    */
-  async afterDeleteQueryBuilder(queryBuilder: DeleteQueryBuilder<any>) {
+  afterDeleteQueryBuilder(queryBuilder: DeleteQueryBuilder<any>) {
     if (!this.tenant?.enable) return;
-    const tenantId = await this.getTenantId();
+    const tenantId = this.getTenantId();
     if (tenantId) {
-      queryBuilder.where(`tenantId = ${tenantId}`);
+      queryBuilder.andWhere(`tenantId = ${tenantId}`);
     }
   }
 }
