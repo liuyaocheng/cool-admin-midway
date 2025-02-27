@@ -190,7 +190,7 @@ export class TaskBullService extends BaseService {
     }
     for (const id of idArr) {
       const task = await this.taskInfoEntity.findOneBy({ id });
-      const exist = await this.exist(task.id);
+      const exist = await this.exist(task.jobId);
       if (exist) {
         this.stop(task.id);
       }
