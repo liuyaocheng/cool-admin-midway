@@ -233,7 +233,7 @@ export class TaskBullService extends BaseService {
       const runningTasks = await this.taskInfoEntity.findBy({ status: 1 });
       if (!_.isEmpty(runningTasks)) {
         for (const task of runningTasks) {
-          const job = await this.exist(task.id); // 任务已存在就不添加
+          const job = await this.exist(task.jobId); // 任务已存在就不添加
           if (!job) {
             this.logger.info(`init task ${task.name}`);
             await this.addOrUpdate(task);
