@@ -229,7 +229,6 @@ export class UserLoginService extends BaseService {
         nickName: wxUserInfo.nickName,
         avatarUrl,
         gender: wxUserInfo.gender,
-        tenantId: userInfo['tenantId'],
         loginType: wxUserInfo.type,
       };
       await this.userInfoEntity.insert(userInfo);
@@ -297,9 +296,11 @@ export class UserLoginService extends BaseService {
    */
   async generateToken(info, isRefresh = false) {
     const { expire, refreshExpire, secret } = this.jwtConfig;
+    const user = await this.userInfoEntity.findOneBy({ id: Equal(info.id) });
     const tokenInfo = {
       isRefresh,
       ...info,
+      tenantId: user?.tenantId,
     };
     return jwt.sign(tokenInfo, secret, {
       expiresIn: isRefresh ? refreshExpire : expire,
