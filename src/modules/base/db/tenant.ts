@@ -165,7 +165,7 @@ export class TenantSubscriber implements EntitySubscriberInterface<any> {
       queryBuilder.andWhere(
         `${
           queryBuilder.alias ? queryBuilder.alias + '.' : ''
-        }tenantId = ${tenantId}`
+        }tenantId = '${tenantId}'`
       );
     }
   }
@@ -195,8 +195,7 @@ export class TenantSubscriber implements EntitySubscriberInterface<any> {
     if (!this.tenant?.enable) return;
     const tenantId = this.getTenantId();
     if (tenantId) {
-      queryBuilder.set({ tenantId });
-      queryBuilder.andWhere(`tenantId = ${tenantId}`);
+      queryBuilder.andWhere(`tenantId = '${tenantId}'`);
     }
   }
 
@@ -208,7 +207,7 @@ export class TenantSubscriber implements EntitySubscriberInterface<any> {
     if (!this.tenant?.enable) return;
     const tenantId = this.getTenantId();
     if (tenantId) {
-      queryBuilder.andWhere(`tenantId = ${tenantId}`);
+      queryBuilder.andWhere(`tenantId = '${tenantId}'`);
     }
   }
 }
