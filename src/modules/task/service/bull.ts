@@ -141,7 +141,7 @@ export class TaskBullService extends BaseService {
       }
       await transactionalEntityManager.save(TaskInfoEntity, params);
       if (params.status === 1) {
-        const exist = await this.exist(params.id);
+        const exist = await this.exist(params.jobId);
         if (exist) {
           await this.remove(params.id);
         }
