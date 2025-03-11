@@ -1,4 +1,4 @@
-import { BaseEntity } from '../base';
+import { BaseEntity, transformerJson } from '../base';
 import { Column, Index, Entity } from 'typeorm';
 
 /**
@@ -23,9 +23,9 @@ export class BaseSysRoleEntity extends BaseEntity {
   @Column({ comment: '数据权限是否关联上下级', default: false })
   relevance: boolean;
 
-  @Column({ comment: '菜单权限', type: 'json' })
+  @Column({ comment: '菜单权限', type: 'json', transformer: transformerJson })
   menuIdList: number[];
 
-  @Column({ comment: '部门权限', type: 'json' })
+  @Column({ comment: '部门权限', type: 'json', transformer: transformerJson })
   departmentIdList: number[];
 }

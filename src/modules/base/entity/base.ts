@@ -2,7 +2,10 @@ import { Index, PrimaryGeneratedColumn, Column } from 'typeorm';
 import * as moment from 'moment';
 import { CoolBaseEntity } from '@cool-midway/core';
 
-const transformer = {
+/**
+ * 时间转换器
+ */
+export const transformerTime = {
   to(value) {
     return value
       ? moment(value).format('YYYY-MM-DD HH:mm:ss')
@@ -13,6 +16,23 @@ const transformer = {
   },
 };
 
+/**
+ * Json转换器
+ */
+export const transformerJson = {
+  to: value => value,
+  from: value => {
+    // 确保从数据库返回的是对象
+    if (typeof value === 'string') {
+      try {
+        return JSON.parse(value);
+      } catch (e) {
+        return value;
+      }
+    }
+    return value;
+  },
+};
 /**
  * 实体基类
  */
@@ -27,7 +47,7 @@ export abstract class BaseEntity extends CoolBaseEntity {
   @Column({
     comment: '创建时间',
     type: 'varchar',
-    transformer,
+    transformer: transformerTime,
   })
   createTime: Date;
 
@@ -35,7 +55,7 @@ export abstract class BaseEntity extends CoolBaseEntity {
   @Column({
     comment: '更新时间',
     type: 'varchar',
-    transformer,
+    transformer: transformerTime,
   })
   updateTime: Date;
 

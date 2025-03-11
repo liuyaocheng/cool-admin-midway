@@ -1,4 +1,4 @@
-import { BaseEntity } from '../../base/entity/base';
+import { BaseEntity, transformerJson } from '../../base/entity/base';
 import { Column, Entity, Index } from 'typeorm';
 
 /**
@@ -30,7 +30,12 @@ export class DemoGoodsEntity extends BaseEntity {
   @Column({ comment: '状态', dict: ['禁用', '启用'], default: 1 })
   status: number;
 
-  @Column({ comment: '示例图', nullable: true, type: 'json' })
+  @Column({
+    comment: '示例图',
+    nullable: true,
+    type: 'json',
+    transformer: transformerJson,
+  })
   exampleImages: string[];
 
   @Column({ comment: '库存', default: 0 })

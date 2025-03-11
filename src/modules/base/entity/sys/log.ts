@@ -1,4 +1,4 @@
-import { BaseEntity } from '../base';
+import { BaseEntity, transformerJson } from '../base';
 import { Column, Index, Entity } from 'typeorm';
 
 /**
@@ -18,6 +18,11 @@ export class BaseSysLogEntity extends BaseEntity {
   @Column({ comment: 'ip', nullable: true })
   ip: string;
 
-  @Column({ comment: '参数', nullable: true, type: 'json' })
+  @Column({
+    comment: '参数',
+    nullable: true,
+    type: 'json',
+    transformer: transformerJson,
+  })
   params: string;
 }

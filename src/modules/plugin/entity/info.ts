@@ -1,4 +1,4 @@
-import { BaseEntity } from '../../base/entity/base';
+import { BaseEntity, transformerJson } from '../../base/entity/base';
 import { Column, Entity, Index } from 'typeorm';
 
 /**
@@ -34,21 +34,31 @@ export class PluginInfoEntity extends BaseEntity {
   @Column({ comment: '状态 0-禁用 1-启用', default: 0 })
   status: number;
 
-  @Column({ comment: '内容', type: 'json' })
+  @Column({ comment: '内容', type: 'json', transformer: transformerJson })
   content: {
     type: 'comm' | 'module';
     data: string;
   };
 
-  @Column({ comment: 'ts内容', type: 'json' })
+  @Column({ comment: 'ts内容', type: 'json', transformer: transformerJson })
   tsContent: {
     type: 'ts';
     data: string;
   };
 
-  @Column({ comment: '插件的plugin.json', type: 'json', nullable: true })
+  @Column({
+    comment: '插件的plugin.json',
+    type: 'json',
+    transformer: transformerJson,
+    nullable: true,
+  })
   pluginJson: any;
 
-  @Column({ comment: '配置', type: 'json', nullable: true })
+  @Column({
+    comment: '配置',
+    type: 'json',
+    transformer: transformerJson,
+    nullable: true,
+  })
   config: any;
 }
