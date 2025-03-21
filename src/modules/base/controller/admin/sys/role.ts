@@ -24,10 +24,10 @@ import { BaseSysRoleService } from '../../../service/sys/role';
       const { userId, roleIds, username } = ctx.admin;
       return [
         // 超级管理员的角色不展示
-        ['label != :label', { label: 'admin' }],
+        ['a.label != :label', { label: 'admin' }],
         // 如果不是超管，只能看到自己新建的或者自己有的角色
         [
-          `(userId=:userId or id in (${roleIds.join(',')}))`,
+          `(a.userId=:userId or a.id in (${roleIds.join(',')}))`,
           { userId },
           username !== 'admin',
         ],
