@@ -10,7 +10,7 @@ import { availablePort } from '../comm/port';
 
 export default {
   // 确保每个项目唯一，项目首次启动会自动生成
-  keys: 'cool-admin-keys-xxxxxx',
+  keys: '142f85f6-0868-4266-b230-fd05fed4e18c',
   koa: {
     port: availablePort(8001),
   },
@@ -64,6 +64,12 @@ export default {
   //   },
   // },
   cool: {
+    redis: {
+      host: '127.0.0.1',
+      port: 6379,
+      password: '',
+      db: 0,
+    },
     // 已经插件化，本地文件上传查看 plugin/config.ts，其他云存储查看对应插件的使用
     file: {},
     // 是否开启多租户
