@@ -448,6 +448,10 @@ export default () => {
       }
     };
 
+    if (_.isEmpty(menus) || !Array.isArray(menus)) {
+      return;
+    }
+
     for (let menu of menus) {
       const menuData = { ...menu };
       delete menuData.childMenus; // 删除childMenus属性，因为我们不想将它保存到数据库中
